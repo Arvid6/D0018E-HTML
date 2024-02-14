@@ -72,16 +72,23 @@ echo "Connected successfully";
                 $prod = htmlentities($_GET['id']);
 
                 //then you can use them in a PHP function.
-                $result = add($prod);
+                $c = "INSERT INTO Cart (UserId, ProductId, Amount) VALUES(2, $prod, 1)";
+                echo($c);
+                if ($conn->query($c)==TRUE) {
+                    echo("Item added to cart");
+                } else {
+                    echo("Error: item not added to cart");
+                }
             }
             function add($prod) {
-                echo "<script>console.log('$prod');</script>";
+
             }
 
 
             if($res->num_rows > 0) {
 
                 while($row = $res->fetch_assoc()) {
+                    $ProductId = $row['ProductId'];
                     $ProductName = $row['ProductName'];
                     $Stock = $row['Stock'];
                     $Price = $row['Price'];
@@ -91,7 +98,7 @@ echo "Connected successfully";
                         <td><?php echo $Price; ?></td>
                         <td><?php echo $Stock; ?></td>
                         <td><form method="Get" action="">
-                            <input type="hidden" name="id" id="id" value="<?php echo $row['ProductName']; ?>"/>
+                            <input type="hidden" name="id" id="id" value="<?php echo $row['ProductId']; ?>"/>
                             <input type="submit" name="add" class="button" value="Add to cart" />
                         </form></td>
                     </tr>
