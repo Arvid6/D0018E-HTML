@@ -43,34 +43,40 @@ echo "Connected successfully";
     <div id="storbild">
         <h1>Hej och välkommen till våran blomsterbutik!</h1>
     </div>
-    <?php
-        session_start();
-        // Query to get the products from database
-        $sql = "SELECT * FROM Product";
-        // Execute the query
-        $res = $conn->query($sql);
 
-        if($res->num_rows > 0) {
-
-            while($row = $res->fetch_assoc()) {
-                $ProductName = $row['ProductName'];
-                $Stock = $row['Stock'];
-                $Price = $row['Price'];
-
-                echo($ProductName);
-            }
-        }
-    ?>
     <div id="text">
-        <p> jag älskar blommor, free shipping</p>
+        <p>Produkter </p>
         <style>
-            a {
-                display: block;
-                height:32px;
-                width:32px;
+            table, th, td {
+                border: 1px solid black;
             }
         </style>
-        <li><a class="link" href="example.com">NAMN, PRIS</a></li>
+        <table>
+            <?php
+            session_start();
+            // Query to get the products from database
+            $sql = "SELECT * FROM Product";
+            // Execute the query
+            $res = $conn->query($sql);
+
+            if($res->num_rows > 0) {
+
+                while($row = $res->fetch_assoc()) {
+                    $ProductName = $row['ProductName'];
+                    $Stock = $row['Stock'];
+                    $Price = $row['Price'];
+
+                    ?>
+                    <tr>
+                        <td><?php echo $ProductName; ?></td>
+                        <td><?php echo $Price; ?></td>
+                        <td><?php echo $Stock; ?></td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </table>
 
     </div>
 

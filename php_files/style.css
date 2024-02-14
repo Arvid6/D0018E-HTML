@@ -107,7 +107,7 @@ main p{
 #storbild{
     height: 500px;
     overflow: hidden;
-    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url(images/dator.jpg);
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url(img/rose.jpeg);
     background-repeat: no-repeat;
     background-size: 100% 1000px;
     color: #ffffff;
