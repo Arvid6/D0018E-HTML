@@ -52,6 +52,11 @@ echo "Connected successfully";
             }
         </style>
         <table>
+        <tr>
+            <td>Namn</td>
+            <td>Pris</td>
+            <td>Lagerstatus</td>
+        </tr>
             <?php
             session_start();
             // Query to get the products from database
@@ -81,7 +86,7 @@ echo "Connected successfully";
     </div>
 
     <div id="container">
-        <div class="bilda">d
+        <div class="bilda">
         </div>
         <div class="bilda">
 
