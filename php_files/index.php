@@ -120,9 +120,6 @@ echo "Connected successfully";
 </main>
 <br>
 
-<footer>
-    <p>arvfal-0@student.ltu.se</p>
-</footer>
 
 
 
