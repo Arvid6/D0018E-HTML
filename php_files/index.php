@@ -1,4 +1,3 @@
-
 <?php
 
 $servername = "utbweb.its.ltu.se";
@@ -51,6 +50,16 @@ echo "Connected successfully";
         // Execute the query
         $res = $conn->query($sql);
 
+        if($res->num_rows > 0) {
+
+            while($row = $res->fetch_assoc()) {
+                $ProductName = $row['ProductName'];
+                $Stock = $row['Stock'];
+                $Price = $row['Price'];
+
+                echo($ProductName);
+            }
+        }
     ?>
     <div id="text">
         <p> jag älskar blommor, free shipping</p>
