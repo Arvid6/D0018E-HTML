@@ -25,6 +25,14 @@ echo "Connected successfully";
 </head>
 
 <body>
+<?php
+    if(array_key_exists('run', $_POST)) {
+        add();
+    }
+    function add() {
+        echo "<script>console.log('kys');</script>";
+    }
+?>
 <header>
     <nav id="nav">
         <div id="logo">
@@ -38,7 +46,6 @@ echo "Connected successfully";
         </ul>
     </nav>
 </header>
-
 <main>
     <div id="storbild">
         <h1>Hej och välkommen till våran blomsterbutik!</h1>
@@ -56,6 +63,7 @@ echo "Connected successfully";
             <td>Namn</td>
             <td>Pris</td>
             <td>Lagerstatus</td>
+            <td>Buy</td>
         </tr>
             <?php
             session_start();
@@ -70,12 +78,14 @@ echo "Connected successfully";
                     $ProductName = $row['ProductName'];
                     $Stock = $row['Stock'];
                     $Price = $row['Price'];
-
                     ?>
                     <tr>
                         <td><?php echo $ProductName; ?></td>
                         <td><?php echo $Price; ?></td>
                         <td><?php echo $Stock; ?></td>
+                        <td><form method="post">
+                            <input type="submit" name="run" class="button" value="add to cart" />
+                        </form></td>
                     </tr>
                     <?php
                 }
