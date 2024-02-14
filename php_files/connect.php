@@ -2,7 +2,7 @@
 
 $servername = "utbweb.its.ltu.se";
 $username = "19990921";
-$password = "Project99!";
+$password = "Projekt99!";
 $dbname = "db19990921";
 
 // Create connection
