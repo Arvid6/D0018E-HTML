@@ -14,6 +14,8 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 
+
+
 ?>
 
 <!doctype html>
@@ -25,14 +27,6 @@ echo "Connected successfully";
 </head>
 
 <body>
-<?php
-    if(array_key_exists('run', $_POST)) {
-        add();
-    }
-    function add() {
-        echo "<script>console.log('kys');</script>";
-    }
-?>
 <header>
     <nav id="nav">
         <div id="logo">
@@ -72,6 +66,19 @@ echo "Connected successfully";
             // Execute the query
             $res = $conn->query($sql);
 
+            if( isset($_GET['add']) )
+            {
+                //be sure to validate and clean your variables
+                $prod = htmlentities($_GET['id']);
+
+                //then you can use them in a PHP function.
+                $result = add($prod);
+            }
+            function add($prod) {
+                echo "<script>console.log('$prod');</script>";
+            }
+
+
             if($res->num_rows > 0) {
 
                 while($row = $res->fetch_assoc()) {
@@ -83,8 +90,9 @@ echo "Connected successfully";
                         <td><?php echo $ProductName; ?></td>
                         <td><?php echo $Price; ?></td>
                         <td><?php echo $Stock; ?></td>
-                        <td><form method="post">
-                            <input type="submit" name="run" class="button" value="add to cart" />
+                        <td><form method="Get" action="">
+                            <input type="hidden" name="id" id="id" value="<?php echo $row['ProductName']; ?>"/>
+                            <input type="submit" name="add" class="button" value="Add to cart" />
                         </form></td>
                     </tr>
                     <?php
