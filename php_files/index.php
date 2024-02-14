@@ -70,15 +70,8 @@ echo "Connected successfully";
                 width:32px;
             }
         </style>
-        <a href="https://pagedart.com">
-            <img src="img/rose.jpeg" height="32px" width="32px">
-        </a>
-        <a href="https://pagedart.com">
-            <img src="img/pinkrose.jpg" height="32px" width="32px">
-        </a>
-        <a href="https://pagedart.com">
-            <img src="img/purp.jpg" height="32px" width="32px">
-        </a>
+        <li><a class="link" href="example.com">NAMN, PRIS</a></li>
+
     </div>
 
     <div id="container">
