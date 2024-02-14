@@ -27,19 +27,16 @@ echo "Connected successfully";
 </head>
 
 <body>
-<header>
-    <nav id="nav">
-        <div id="logo">
-            <!--<a href="index.html">
-            <img src="images/logo.png" width="100%" alt="logo" id="bild">
-            </a>-->
+    
+    <div class="dropdown">
+        <button>Cart</button>
+        <div class="content">
+            <a href="#">AKDShDJ</a>
+            <a href="#">AKDShDJ</a>
+            <a href="#">AKDShDJ</a>
         </div>
-        <ul>
-            <li><a class="link" href="index.html">START</a></li>
-            <li><a class="link" href="kontakt.html">KONTAKT</a></li>
-        </ul>
-    </nav>
-</header>
+    </div>
+
 <main>
     <div id="storbild">
         <h1>Hej och välkommen till våran blomsterbutik!</h1>
@@ -72,23 +69,16 @@ echo "Connected successfully";
                 $prod = htmlentities($_GET['id']);
 
                 //then you can use them in a PHP function.
-                $c = "INSERT INTO Cart (UserId, ProductId, Amount) VALUES(2, $prod, 1)";
-                echo($c);
-                if ($conn->query($c)==TRUE) {
-                    echo("Item added to cart");
-                } else {
-                    echo("Error: item not added to cart");
-                }
+                $result = add($prod);
             }
             function add($prod) {
-
+                echo "<script>console.log('$prod');</script>";
             }
 
 
             if($res->num_rows > 0) {
 
                 while($row = $res->fetch_assoc()) {
-                    $ProductId = $row['ProductId'];
                     $ProductName = $row['ProductName'];
                     $Stock = $row['Stock'];
                     $Price = $row['Price'];
@@ -98,7 +88,7 @@ echo "Connected successfully";
                         <td><?php echo $Price; ?></td>
                         <td><?php echo $Stock; ?></td>
                         <td><form method="Get" action="">
-                            <input type="hidden" name="id" id="id" value="<?php echo $row['ProductId']; ?>"/>
+                            <input type="hidden" name="id" id="id" value="<?php echo $row['ProductName']; ?>"/>
                             <input type="submit" name="add" class="button" value="Add to cart" />
                         </form></td>
                     </tr>
@@ -119,10 +109,6 @@ echo "Connected successfully";
     </div>
 </main>
 <br>
-
-<footer>
-    <p>arvfal-0@student.ltu.se</p>
-</footer>
 
 
 
