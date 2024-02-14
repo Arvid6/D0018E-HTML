@@ -67,7 +67,13 @@ echo "Connected successfully";
             {
                 //be sure to validate and clean your variables
                 $prod = htmlentities($_GET['id']);
-
+                $add_cart_item = "INSERT INTO Cart (UserId, ProductId, Amount) VALUES(2, $prod, 1)";
+                echo($add_cart_item);
+                if($conn->query($add_cart_item)) {
+                    echo("Item added to cart");
+                }else{
+                    echo("Error: couldn't add item to cart");
+                }
                 //then you can use them in a PHP function.
                 $result = add($prod);
             }
@@ -79,6 +85,7 @@ echo "Connected successfully";
             if($res->num_rows > 0) {
 
                 while($row = $res->fetch_assoc()) {
+                    $ProductId = $row['ProductId'];
                     $ProductName = $row['ProductName'];
                     $Stock = $row['Stock'];
                     $Price = $row['Price'];
@@ -88,7 +95,7 @@ echo "Connected successfully";
                         <td><?php echo $Price; ?></td>
                         <td><?php echo $Stock; ?></td>
                         <td><form method="Get" action="">
-                            <input type="hidden" name="id" id="id" value="<?php echo $row['ProductName']; ?>"/>
+                            <input type="hidden" name="id" id="id" value="<?php echo $ProductId; ?>"/>
                             <input type="submit" name="add" class="button" value="Add to cart" />
                         </form></td>
                     </tr>
