@@ -148,43 +148,10 @@ main p{
 /*kontakt*/
 
 #order{
-    margin-top: 10%;
+    margin-top: 1%;
     color: black;
 }
 
-
-#knav{
-    position: fixed; /* Set the navbar to fixed position */
-    overflow: hidden;
-    background-color: black;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.klink{
-    color: white;
-}
-
-#ktext{
-    width: 60%;
-    float: left;
-}
-
-#bildk{
-    width: 35%;
-    margin: 1%;
-}
-
-#kbild{
-    transition: 0.3s;
-    width: 60%;
-}
-
-#kontainer{
-    width: 50%;
-    margin-left: 25%;
-}
 
 /*END kontakt*/
 
