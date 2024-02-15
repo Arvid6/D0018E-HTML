@@ -74,18 +74,49 @@ if($lol->num_rows > 0) { //
         ?>
     </table>
     <form method="Get" action="">
-            <h1>TOTAL COST: <?php echo $totPrice ?></h1>
-    <input type="hidden" name="data" id="data" value="<?php ?>"/>
-    <input type="submit" name="co" class="button" value="CHECK-OUT" />
+        <h1>TOTAL COST: <?php echo $totPrice ?></h1>
+        <input type="hidden" name="data" id="data" value="<?php ?>"/>
+        <input type="submit" name="co" class="button" value="CHECK-OUT" />
     </form>
-    <?php
+        <?php
 }
+
+if(isset($_GET['co'])) {
+    // Add from cart to order, and delete the cart after
+    $tempid = $_SESSION['temp_customer'];
+    $lol = $conn->query("SELECT * FROM TEMPCARTITEMS  WHERE TempcartId = $cartId");
+
+    if($lol->num_rows > 0) {
+        // Add new order if there are items in the cart
+        $conn->query("INSERT INTO TEMPORDER (UserId) VALUES ($tempid)");
+        // Fetch order ID
+        $fetch_orderId = $conn->query("SELECT TemporderId FROM TEMPORDER WHERE UserId = 2 ORDER BY TemporderId Desc");
+
+        $orderId = ($fetch_orderId->fetch_assoc())['TemporderId'];
+        echo($orderId);
+        while($row = $lol->fetch_assoc()) {
+            $ProductId = $row['ProductId'];
+            $Amount = $row['Amount'];
+
+            $qr = "INSERT INTO TEMPORDERITEM (TemporderId, ProductId, Amount, Price) VALUES ($orderId, $ProductId, $Amount, 500)";
+            echo($qr);
+            $conn->query($qr);
+            echo("HMMMMMMMMMM");
+        }
+
+        // Delete every cart item corresponding to the right user id
+
+        echo($cartId);
+        $conn->query("DELETE FROM TEMPCARTITEMS WHERE TempcartId = $cartId");
+        echo("Order made!");
+    }else {
+        echo("Your cart is empty");
+    }
+
+}
+
 ?>
-
-
-
-?>
-<p> HEJ HEJ HEJ HÄR KAN MAN SÄTTA IN INFO</p>
+<p> </p>
     </div>
 </main>
 <br>
