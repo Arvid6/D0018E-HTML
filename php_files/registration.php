@@ -57,7 +57,7 @@
                 $stmt = $conn -> stmt_init();
                 $prepareStmt = $stmt -> prepare($sql);
                 if ($prepareStmt) {
-                    $stmt -> bind_param("sssis",$firstName,$lastName, $email, $phoneNumber, $passwordHash);
+                    $stmt -> bind_param("sssss",$firstName,$lastName, $email, $phoneNumber, $passwordHash);
                     $stmt -> execute();
                     echo "<div class='alert alert-success'>You were registered successfully</div>";
                 }else{
