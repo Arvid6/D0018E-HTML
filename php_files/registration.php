@@ -7,7 +7,7 @@
     <title>Register an Account</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="registerBody">
 <header>
     <nav>
         <ul>
