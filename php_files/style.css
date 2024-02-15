@@ -99,6 +99,7 @@ nav li{
 
 /*END header*/
 
+
 /*main*/
 
 main{
@@ -115,6 +116,13 @@ main p{
     width: 70%;
     display: flex;
     margin: auto;
+
+}
+#reg{
+    width: 70%;
+    display: flex;
+    margin-top: 2%;
+    margin-left: 20%;
 
 }
 
@@ -145,19 +153,33 @@ main p{
 
 /*END main*/
 
-/*kontakt*/
+/*Checkout*/
 
 #order{
-    margin-top: 1%;
     color: black;
+    width: 75%;
+    margin: auto;
 }
 
 
-/*END kontakt*/
+/*END Checkout*/
 
+/*Register and login*/
 
+.registerBody{
+    padding: 50px;
+}
+.reg{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 50px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+}
+.reg-group{
+    margin-bottom: 30px;
+}
 
-
+/*END Register and login*/
 
 
 

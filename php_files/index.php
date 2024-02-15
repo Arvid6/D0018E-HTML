@@ -31,8 +31,8 @@ echo "Connected successfully";
     <nav>
         <ul>
             <li><a class="link" href="index.php">START</a></li>
-            <li><a class="link" href="checkout.php">CHCKOUT</a></li>
-            <li><a class="link" href="registration.php">REGISTRATE</a></li>
+            <li><a class="link" href="checkout.php">CHECKOUT</a></li>
+            <li><a class="link" href="login.php">SIGN IN</a></li>
         </ul>
     </nav>
 </header>

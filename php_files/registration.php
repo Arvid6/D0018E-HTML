@@ -7,17 +7,18 @@
     <title>Register an Account</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="registerBody">
 <header>
     <nav>
         <ul>
             <li><a class="link" href="index.php">START</a></li>
-            <li><a class="link" href="checkout.php">CHCKOUT</a></li>
-            <li><a class="link" href="registration.php">REGISTRATE</a></li>
+            <li><a class="link" href="checkout.php">CHECKOUT</a></li>
+            <li><a class="link" href="login.php">SIGN IN</a></li>
         </ul>
     </nav>
 </header>
-    <div class="container">
+<br><br><br>
+<div class="reg">
         <?php
         if (isset($_POST["submit"])){
             ini_set('display_errors', 1);
@@ -94,7 +95,7 @@
             <div class="reg-group">
                 <input type="password" name="repeat-password" placeholder="Repeat Password">
             </div>
-            <div class="form-submit">
+            <div class="reg-submit">
                 <input type="submit" value="Register" name="submit">
             </div>
         </form>
