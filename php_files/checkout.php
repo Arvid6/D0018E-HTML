@@ -108,6 +108,7 @@ if(isset($_GET['co'])) {
 
         echo($cartId);
         $conn->query("DELETE FROM TEMPCARTITEMS WHERE TempcartId = $cartId");
+        header("Refresh:0");
         echo("Order made!");
     }else {
         echo("Your cart is empty");
