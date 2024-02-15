@@ -37,9 +37,56 @@ echo "Connected successfully";
     </nav>
 </header>
 
-<main id="order">
-<p> HEJ HEJ HEJ HÄR KAN MAN SÄTTA IN INFO</p>
+<main>
+    <div id="order">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+    <table>
+<?php
+    session_start();
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //FIX, SHOULD GET CART ID TO THEN GET ITEMS
+    $fetch = $sql->fetch_assoc();
+    $cartId = $fetch['TempcartId'];
+    $lol = $conn->query("SELECT * FROM TEMPCARTITEMS  WHERE TempcartId = $cartId");
+    $totPrice = 0;
 
+    if( isset($_GET['co']) ){
+        $prod = htmlentities($_GET['data']);
+    }
+
+
+if($lol->num_rows > 0) { //
+
+    while($row = $lol->fetch_assoc()) {
+        $ProductId = $row['ProductId'];
+        $Amount = $row['Amount'];
+        //$Price = $row['SELECT Price FROM ProductId']; //???? FILL LATER WHEN PRICE IS ADDED AS VARIABLE
+        //$totPrice += $Price
+        ?>
+        <tr>
+            <td><?php echo $ProductId; ?></td>
+            <td><?php echo $Amount; ?></td>
+            <?php
+        }
+        ?>
+    </table>
+    <form method="Get" action="">
+            <h1>TOTAL COST: <?php echo $totPrice ?></h1>
+    <input type="hidden" name="data" id="data" value="<?php ?>"/>
+    <input type="submit" name="co" class="button" value="CHECK-OUT" />
+    </form>
+    <?php
+}
+?>
+
+
+
+?>
+<p> HEJ HEJ HEJ HÄR KAN MAN SÄTTA IN INFO</p>
+    </div>
 </main>
 <br>
 

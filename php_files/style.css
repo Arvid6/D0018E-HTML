@@ -99,6 +99,7 @@ nav li{
 
 /*END header*/
 
+
 /*main*/
 
 main{
@@ -152,15 +153,16 @@ main p{
 
 /*END main*/
 
-/*kontakt*/
+/*Checkout*/
 
 #order{
-    margin-top: 1%;
     color: black;
+    width: 75%;
+    margin: auto;
 }
 
 
-/*END kontakt*/
+/*END Checkout*/
 
 /*Register and login*/
 
@@ -178,6 +180,7 @@ main p{
 }
 
 /*END Register and login*/
+
 
 
 
