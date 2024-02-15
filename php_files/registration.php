@@ -1,3 +1,12 @@
+<?php
+
+session_start();
+if (isset($_SESSION["login"])) {
+    header("Location: index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,10 +37,10 @@
             $lastName = $_POST["last-name"];
             $email = $_POST["email"];
             $phoneNumber = $_POST["phone-number"];
-            $password = $_POST["password"];
+            $uPassword = $_POST["password"];
             $passwordRepeat = $_POST["repeat-password"];
 
-            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $passwordHash = password_hash($uPassword, PASSWORD_DEFAULT);
             $errors = array();
 
             if (empty($firstName) or empty($lastName) or empty($email) or empty($phoneNumber) or empty($password) or empty($passwordRepeat)) {
@@ -60,7 +69,7 @@
 
             if (count($errors) > 0) {
                 foreach ($errors as $error) {
-                    echo "<div class='alert alert-danger'>$error</div>";
+                    echo "<div>$error</div>";
                 }
             }else{
                 $sql = "INSERT INTO User (firstName, lastName, email, phoneNumber, password) VALUES (?,?,?,?,?)";
@@ -69,7 +78,7 @@
                 if ($prepareStmt) {
                     $stmt -> bind_param("sssss",$firstName,$lastName, $email, $phoneNumber, $passwordHash);
                     $stmt -> execute();
-                    echo "<div class='alert alert-success'>You were registered successfully</div>";
+                    echo "<div>You were registered successfully</div>";
                 }else{
                     die("Something went wrong");
                 }

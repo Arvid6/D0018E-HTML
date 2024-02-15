@@ -1,3 +1,12 @@
+<?php
+
+session_start();
+if (isset($_SESSION["login"])) {
+    header("Location: index.php");
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +22,38 @@
         <ul>
             <li><a class="link" href="index.php">START</a></li>
             <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><a class="link" href="login.php">SIGN IN</a></li>
         </ul>
     </nav>
 </header>
 <br><br><br>
     <div class="reg">
+        <?php
+        global $conn;
+        if (isset($_POST["login"])) {
+            $email = $_POST["email"];
+            $uPassword = $_POST["password"];
+            require_once "connect.php";
+            $emailCheck = "SELECT * FROM User WHERE email = '$email'";
+            $result = $conn -> query($emailCheck);
+            $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            if ($user) {
+                if (password_verify($uPassword, $user["password"])) {
+                    $getUserId = "SELECT userId FROM User WHERE email = '$email'";
+                    $idResult = $conn -> query($getUserId);
+                    $userId = mysqli_fetch_array($idResult, MYSQLI_NUM);
+                    session_start();
+                    $_SESSION["login"] = true;
+                    $_SESSION["userId"] = $userId;
+                    header("Location: index.php");
+                    die();
+                }else{
+                    echo "<div>Incorrect password</div>";
+                }
+            }else{
+                echo "<div>E-mail doesn't exist</div>";
+            }
+        }
+        ?>
         <form action="login.php" method="post">
             <div class="reg-group">
                 <input type="email" placeholder="E-mail" name="email">
