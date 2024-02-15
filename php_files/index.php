@@ -27,16 +27,23 @@ echo "Connected successfully";
 </head>
 
 <body>
-    
-    <div class="dropdown">
-        <button>Cart</button>
-        <div class="content">
-            <a href="#">AKDShDJ</a>
-            <a href="#">AKDShDJ</a>
-            <a href="#">AKDShDJ</a>
-        </div>
+<header>
+    <nav>
+        <ul>
+            <li><a class="link" href="index.php">START</a></li>
+            <li><a class="link" href="checkout.php">CHCKOUT</a></li>
+            <li><a class="link" href="registration.php">REGISTRATE</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="dropdown">
+    <button>Cart</button>
+    <div class="content">
+        <a href="#">AKDShDJ</a>
+        <a href="#">AKDShDJ</a>
+        <a href="#">AKDShDJ</a>
     </div>
-
+</div>
 <main>
     <div id="storbild">
         <h1>Hej och välkommen till våran blomsterbutik!</h1>

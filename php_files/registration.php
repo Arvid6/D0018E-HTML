@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header>
+    <nav>
+        <ul>
+            <li><a class="link" href="index.php">START</a></li>
+            <li><a class="link" href="checkout.php">CHCKOUT</a></li>
+            <li><a class="link" href="registration.php">REGISTRATE</a></li>
+        </ul>
+    </nav>
+</header>
     <div class="container">
         <?php
         if (isset($_POST["submit"])){

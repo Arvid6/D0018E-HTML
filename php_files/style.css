@@ -6,12 +6,12 @@ body {
     font-family: 'Courier New', Courier, monospace;
     width: 100%;
     display: flex;
-    padding: 0;
     flex-direction: column;
     height: 100%;
     padding-bottom: 6rem;
     min-height: 100%;
     position: relative;
+    padding: 0;
 }
 
 /*header*/
@@ -59,11 +59,11 @@ header{
 nav{
     position: fixed; /* Set the navbar to fixed position */
     overflow: hidden;
-    background-color: transparent;
+    background-color: black;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    color: #ffffff;
+    color: #000000;
 }
 
 #nav{
@@ -147,9 +147,11 @@ main p{
 
 /*kontakt*/
 
-#kontakt{
+#order{
     margin-top: 10%;
+    color: black;
 }
+
 
 #knav{
     position: fixed; /* Set the navbar to fixed position */
