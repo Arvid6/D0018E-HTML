@@ -162,7 +162,7 @@ main p{
 
 /*END kontakt*/
 
-/*Register*/
+/*Register and login*/
 
 .registerBody{
     padding: 50px;
@@ -177,6 +177,7 @@ main p{
     margin-bottom: 30px;
 }
 
+/*END Register and login*/
 
 
 

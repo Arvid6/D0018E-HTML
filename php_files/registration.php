@@ -13,7 +13,7 @@
         <ul>
             <li><a class="link" href="index.php">START</a></li>
             <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><a class="link" href="registration.php">REGISTER</a></li>
+            <li><a class="link" href="login.php">SIGN IN</a></li>
         </ul>
     </nav>
 </header>
@@ -95,7 +95,7 @@
             <div class="reg-group">
                 <input type="password" name="repeat-password" placeholder="Repeat Password">
             </div>
-            <div class="form-submit">
+            <div class="reg-submit">
                 <input type="submit" value="Register" name="submit">
             </div>
         </form>

@@ -32,7 +32,7 @@ echo "Connected successfully";
         <ul>
             <li><a class="link" href="index.php">START</a></li>
             <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><a class="link" href="registration.php">REGISTER</a></li>
+            <li><a class="link" href="login.php">SIGN IN</a></li>
         </ul>
     </nav>
 </header>
