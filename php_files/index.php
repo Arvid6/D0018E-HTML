@@ -65,6 +65,20 @@ echo "Connected successfully";
         </tr>
             <?php
             session_start();
+            $_SESSION['temp_customer'] = 2;
+            $hm = $_SESSION['temp_customer'];
+
+            $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = 2";
+            echo($checkUser);
+            $refresh_block = $conn->query($checkUser);
+
+
+            if((!$refresh_block->num_rows > 0)) {
+                echo("skjjut mig");
+                $conn->query("INSERT INTO TEMPCART (UserId) VALUES ($hm)");
+            }
+
+
             // Query to get the products from database
             $sql = "SELECT * FROM Product";
             // Execute the query
@@ -74,7 +88,11 @@ echo "Connected successfully";
             {
                 //be sure to validate and clean your variables
                 $prod = htmlentities($_GET['id']);
-                $add_cart_item = "INSERT INTO Cart (UserId, ProductId, Amount) VALUES(2, $prod, 1)";
+                $ci = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2");
+                $fetch = $ci->fetch_assoc();
+                $tempid = $fetch['TempcartId'];
+
+                $add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
                 echo($add_cart_item);
                 if($conn->query($add_cart_item)) {
                     echo("Item added to cart");
