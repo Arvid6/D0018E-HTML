@@ -13,8 +13,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 echo "Connected successfully";
-
-
+session_start();
 
 ?>
 
@@ -32,7 +31,12 @@ echo "Connected successfully";
         <ul>
             <li><a class="link" href="index.php">START</a></li>
             <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><a class="link" href="login.php">SIGN IN</a></li>
+            <li><?php if (isset($_SESSION['login'])) { ?>
+                    <a class="link" href="logout.php">SIGN OUT</a>
+                <?php }else{ ?>
+                    <a class="link" href="login.php">SIGN IN</a>
+                <?php } ?>
+                </li>
         </ul>
     </nav>
 </header>
@@ -64,12 +68,10 @@ echo "Connected successfully";
             <td>Buy</td>
         </tr>
             <?php
-            session_start();
             $_SESSION['temp_customer'] = 2;
             $hm = $_SESSION['temp_customer'];
 
             $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = 2";
-            echo($checkUser);
             $refresh_block = $conn->query($checkUser);
 
 
