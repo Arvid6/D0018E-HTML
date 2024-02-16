@@ -26,26 +26,24 @@ session_start();
 </head>
 
 <body>
-<header>
-    <nav>
-        <ul>
-            <li><a class="link" href="index.php">START</a></li>
-            <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><?php if (isset($_SESSION['login'])) { ?>
-                    <a class="link" href="logout.php">SIGN OUT</a>
+
+<div id="minimeny">
+    <div id="minimeny2">
+        <button class="buttonaverage" ><a class="linkmeny" href="index.php">START</a></button>
+        <button class="buttonaverage"><?php if (isset($_SESSION['login'])) { ?>
+                    <a class="linkmeny" href="logout.php">SIGN OUT</a>
                 <?php }else{ ?>
-                    <a class="link" href="login.php">SIGN IN</a>
-                <?php } ?>
-                </li>
-        </ul>
-    </nav>
-</header>
-<div class="dropdown">
-    <button>Cart</button>
-    <div class="content">
-        <a href="#">AKDShDJ</a>
-        <a href="#">AKDShDJ</a>
-        <a href="#">AKDShDJ</a>
+                <a class="linkmeny" href="login.php">SIGN IN</a>
+                <?php } ?></button>
+        <div class="dropdown">
+            <button id="buttondrop">Cart</button>
+            <div class="content">
+                <a href="#">THIS </a>
+                <a href="#">IS </a>
+                <a href="#">PRODUCTS</a>
+                <button class="buttonaverage"><a href="checkout.php">CHECKOUT</a></button>
+            </div>
+        </div>
     </div>
 </div>
 <main>

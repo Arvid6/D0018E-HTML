@@ -15,7 +15,44 @@ body {
 }
 
 /*header*/
-.dropdown button {
+.linkmeny{
+    text-decoration: none;
+    color: white;
+}
+#minimeny {
+    text-decoration: none;
+    display: flex;
+    background-color: #7e1919;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    align-content: center;
+    
+}
+#minimeny2{
+    text-decoration: none;
+    margin: auto;
+    display: flex;
+}
+
+.buttonaverage {
+    background-color: #7e1919;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+.buttonaverage:hover {
+    background-color: #5f1212;
+
+}
+.dropdown #buttondrop:hover{
+    background-color: #5f1212;
+}
+.dropdown #buttondrop {
     background-color: #7e1919;
     color: #ffffff;
     padding: 10px 15px;
