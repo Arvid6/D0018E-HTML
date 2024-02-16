@@ -43,7 +43,7 @@ if (isset($_SESSION["login"])) {
             $passwordHash = password_hash($uPassword, PASSWORD_DEFAULT);
             $errors = array();
 
-            if (empty($firstName) or empty($lastName) or empty($email) or empty($phoneNumber) or empty($password) or empty($passwordRepeat)) {
+            if (empty($firstName) or empty($lastName) or empty($email) or empty($phoneNumber) or empty($uPassword) or empty($passwordRepeat)) {
                array_push($errors, "All fields need to be filled in");
             }
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -52,10 +52,10 @@ if (isset($_SESSION["login"])) {
             if (!preg_match("/^[0-9]{10}+$/", $phoneNumber)) {
                 array_push($errors, "Please provide a valid phone number");
             }
-            if (strlen($password) < 8) {
+            if (strlen($uPassword) < 8) {
                 array_push($errors, "Password must be at least 8 characters long");
             }
-            if ($password != $passwordRepeat) {
+            if ($uPassword != $passwordRepeat) {
                 array_push($errors, "Password does not match");
             }
             require_once "connect.php";
