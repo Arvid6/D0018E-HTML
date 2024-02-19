@@ -51,7 +51,7 @@ echo "Connected successfully";
     $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //FIX, SHOULD GET CART ID TO THEN GET ITEMS
     $fetch = $sql->fetch_assoc();
     $cartId = $fetch['TempcartId'];
-$lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
+    $lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
     $totPrice = 0;
 
     if( isset($_GET['co']) ){
@@ -63,10 +63,10 @@ if($lol->num_rows > 0) { //
 
     while($row = $lol->fetch_assoc()) {
         $ProductId = $row['ProductId'];
-        $TotalAmount = $row['TotalAmount'];
         $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId");
         $fetch = $tName->fetch_assoc();
         $Name = $fetch['ProductName'];
+        $TotalAmount = $row['TotalAmount'];
         $Price = $fetch['Price'];
         $totPrice += $Price * $TotalAmount;
         ?>
