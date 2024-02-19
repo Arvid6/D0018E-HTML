@@ -48,9 +48,11 @@ echo "Connected successfully";
     <table id="clist">
 <?php
     session_start();
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //FIX, SHOULD GET CART ID TO THEN GET ITEMS
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
-    $cartId = $fetch['TempcartId'];
+    $cartId = $fetch['TempcartId']; //Fetch the ID
+
+    //Get the product and the amount of each product grouped by ID
     $lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
     $totPrice = 0;
 
@@ -60,14 +62,14 @@ echo "Connected successfully";
 
 
 if($lol->num_rows > 0) { //
-
+    //Get all the id per product, calculate the total price and display everything in a table.
     while($row = $lol->fetch_assoc()) {
         $ProductId = $row['ProductId'];
-        $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId");
+        $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId"); //get the name from ID
         $fetch = $tName->fetch_assoc();
         $Name = $fetch['ProductName'];
         $TotalAmount = $row['TotalAmount'];
-        $Price = $fetch['Price'];
+        $Price = $fetch['Price']; // Needs to be dynamic cant be gotten as a pointer to the product like it is now
         $totPrice += $Price * $TotalAmount;
         ?>
         <tr>
@@ -76,6 +78,7 @@ if($lol->num_rows > 0) { //
         </tr>
             <?php
         }
+        //Create button
         ?>
     </table>
     <form method="Get" action="">
