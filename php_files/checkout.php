@@ -63,11 +63,14 @@ if($lol->num_rows > 0) { //
     while($row = $lol->fetch_assoc()) {
         $ProductId = $row['ProductId'];
         $Amount = $row['Amount'];
-        //$Price = $row['SELECT Price FROM ProductId']; //???? FILL LATER WHEN PRICE IS ADDED AS VARIABLE
-        //$totPrice += $Price
+        $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId"); //FIX, SHOULD GET CART ID TO THEN GET ITEMS
+        $fetch = $tName->fetch_assoc();
+        $Name = $fetch['ProductName'];
+        $Price = $fetch['Price']; //???? FILL LATER WHEN PRICE IS ADDED AS VARIABLE
+        $totPrice += $Price
         ?>
         <tr>
-            <td><?php echo $ProductId; ?></td>
+            <td><?php echo $Name ; ?></td>
             <td><?php echo $Amount; ?></td>
             <?php
         }
