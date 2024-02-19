@@ -195,7 +195,15 @@ main p{
 #order{
     color: black;
     width: 75%;
-    margin: auto;
+    margin-left: 25%;
+    margin-top: 10%;
+    display: flex;
+}
+
+#clist{
+    margin-top: 10%;
+    margin-left: 25%;
+    display: flex;
 }
 
 

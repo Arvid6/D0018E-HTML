@@ -38,19 +38,20 @@ echo "Connected successfully";
 </header>
 
 <main>
+    <br><br><br>
     <div id="order">
     <style>
         table, th, td {
             border: 1px solid black;
         }
     </style>
-    <table>
+    <table id="clist">
 <?php
     session_start();
     $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //FIX, SHOULD GET CART ID TO THEN GET ITEMS
     $fetch = $sql->fetch_assoc();
     $cartId = $fetch['TempcartId'];
-    $lol = $conn->query("SELECT * FROM TEMPCARTITEMS  WHERE TempcartId = $cartId");
+$lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
     $totPrice = 0;
 
     if( isset($_GET['co']) ){
@@ -62,16 +63,17 @@ if($lol->num_rows > 0) { //
 
     while($row = $lol->fetch_assoc()) {
         $ProductId = $row['ProductId'];
-        $Amount = $row['Amount'];
-        $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId"); //FIX, SHOULD GET CART ID TO THEN GET ITEMS
+        $TotalAmount = $row['TotalAmount'];
+        $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId");
         $fetch = $tName->fetch_assoc();
         $Name = $fetch['ProductName'];
-        $Price = $fetch['Price']; //???? FILL LATER WHEN PRICE IS ADDED AS VARIABLE
-        $totPrice += $Price
+        $Price = $fetch['Price'];
+        $totPrice += $Price * $TotalAmount;
         ?>
         <tr>
             <td><?php echo $Name ; ?></td>
-            <td><?php echo $Amount; ?></td>
+            <td><?php echo $TotalAmount; ?></td>
+        </tr>
             <?php
         }
         ?>
