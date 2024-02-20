@@ -60,6 +60,11 @@ session_start();
                 <?php
                 }
                 }
+                else{
+                    ?>
+                    <a href="">No items in cart :(</a>
+                <?php
+                }
                 ?>
                 <button class="buttonaverage"><a href="checkout.php">CHECKOUT</a></button>
             </div>

@@ -90,6 +90,7 @@ if($lol->num_rows > 0) { //
         <?php
 }
 
+
 if(isset($_GET['co'])) {
     // Add from cart to order, and delete the cart after
     $tempid = $_SESSION['temp_customer'];
