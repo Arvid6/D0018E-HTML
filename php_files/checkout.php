@@ -38,11 +38,12 @@ echo "Connected successfully";
 </header>
 
 <main>
-    <br><br><br>
     <div id="order">
     <style>
         table, th, td {
             border: 1px solid black;
+            font-size: larger;
+            margin: 0 auto;
         }
     </style>
     <table id="clist">
@@ -81,7 +82,7 @@ if($lol->num_rows > 0) { //
         //Create button
         ?>
     </table>
-    <form method="Get" action="">
+    <form method="Get" action="" id="chbutton">
         <h1>TOTAL COST: <?php echo $totPrice ?></h1>
         <input type="hidden" name="data" id="data" value="<?php ?>"/>
         <input type="submit" name="co" class="button" value="CHECK-OUT" />

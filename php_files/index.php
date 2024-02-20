@@ -28,6 +28,14 @@ session_start();
 <body>
 
 <div id="minimeny">
+    <?php
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //Get Tempcart
+    $fetch = $sql->fetch_assoc();
+    $cartId = $fetch['TempcartId']; //Fetch the ID
+
+    //Get the product and the amount of each product grouped by ID
+    $lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
+    ?>
     <div id="minimeny2">
         <button class="buttonaverage" ><a class="linkmeny" href="index.php">START</a></button>
         <button class="buttonaverage"><?php if (isset($_SESSION['login'])) { ?>
@@ -38,9 +46,21 @@ session_start();
         <div class="dropdown">
             <button id="buttondrop">Cart</button>
             <div class="content">
-                <a href="#">THIS </a>
-                <a href="#">IS </a>
-                <a href="#">PRODUCTS</a>
+                <?php
+                if($lol->num_rows > 0) { //
+                //Get all the id per product, calculate the total price and display everything in a table.
+                while($row = $lol->fetch_assoc()) {
+                    $ProductId = $row['ProductId'];
+                    $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId"); //get the name from ID
+                    $fetch = $tName->fetch_assoc();
+                    $Name = $fetch['ProductName'];
+                    $TotalAmount = $row['TotalAmount'];
+                    ?>
+                <a href="#"><?php echo $Name, " | ", $TotalAmount ; ?> </a>
+                <?php
+                }
+                }
+                ?>
                 <button class="buttonaverage"><a href="checkout.php">CHECKOUT</a></button>
             </div>
         </div>
