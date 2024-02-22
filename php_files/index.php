@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 session_start();
-
+echo("HALLÅ");
 ?>
 
 <!doctype html>
@@ -29,7 +29,8 @@ session_start();
 
 <div id="minimeny">
     <?php
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //Get Tempcart
+    $temp_customer = session_id();
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$temp_customer'"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
     $cartId = $fetch['TempcartId']; //Fetch the ID
 
@@ -91,16 +92,20 @@ session_start();
             <td>Buy</td>
         </tr>
             <?php
-            $_SESSION['temp_customer'] = 2;
-            $hm = $_SESSION['temp_customer'];
+            #$_SESSION['temp_customer'] = 2;
+            #$hm = $_SESSION['temp_customer'];
 
-            $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = 2";
+            $temp_customer = session_id();
+            echo($temp_customer);
+
+            $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = '$temp_customer'";
+            echo($checkUser);
             $refresh_block = $conn->query($checkUser);
 
 
             if((!$refresh_block->num_rows > 0)) {
                 echo("skjjut mig");
-                $conn->query("INSERT INTO TEMPCART (UserId) VALUES ($hm)");
+                $conn->query("INSERT INTO TEMPCART (UserId) VALUES ('$temp_customer')");
             }
 
 
@@ -113,17 +118,33 @@ session_start();
             {
                 //be sure to validate and clean your variables
                 $prod = htmlentities($_GET['id']);
-                $ci = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2");
+
+                // Select the right cart id
+                $ci = $conn->query("SELECT TempcartId FROM TEMPCART WHERE UserId = '$temp_customer'");
                 $fetch = $ci->fetch_assoc();
                 $tempid = $fetch['TempcartId'];
 
-                $add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
+                // Check if the product already exists in the cart
+                $already_in_cart_query = "SELECT ProductId FROM TEMPCARTITEMS WHERE TempcartId = $tempid and ProductId = $prod";
+                $already_in_cart = $conn->query($already_in_cart_query);
+
+                if($already_in_cart->num_rows > 0) {
+                    $update_quantity = "UPDATE TEMPCARTITEMS SET Amount = Amount + 1 WHERE TempcartId = $tempid AND ProductId = $prod";
+                    $conn->query($update_quantity);
+
+                }else {
+                    $add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
+                    $conn->query($add_cart_item);
+
+                }
+
+                /*$add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
                 echo($add_cart_item);
                 if($conn->query($add_cart_item)) {
                     echo("Item added to cart");
                 }else{
                     echo("Error: couldn't add item to cart");
-                }
+                }*/
                 //then you can use them in a PHP function.
                 $result = add($prod);
             }

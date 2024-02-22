@@ -15,7 +15,6 @@ if ($conn->connect_error) {
 echo "Connected successfully";
 
 
-
 ?>
 
 <!doctype html>
@@ -48,8 +47,12 @@ echo "Connected successfully";
     </style>
     <table id="clist">
 <?php
+    echo("SGUGUGAUGAU");
     session_start();
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = 2"); //Get Tempcart
+    echo(session_id());
+    $temp_customer = session_id();
+    echo("HEJEJEJEJEJ");
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$temp_customer'"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
     $cartId = $fetch['TempcartId']; //Fetch the ID
 
@@ -76,10 +79,10 @@ if($lol->num_rows > 0) { //
         <tr>
             <td><?php echo $Name ; ?></td>
             <td><?php echo $TotalAmount; ?></td>
+            <td><?php echo $temp_customer; ?></td>
         </tr>
             <?php
         }
-        //Create button
         ?>
     </table>
     <form method="Get" action="" id="chbutton">
@@ -98,9 +101,9 @@ if(isset($_GET['co'])) {
 
     if($lol->num_rows > 0) {
         // Add new order if there are items in the cart
-        $conn->query("INSERT INTO TEMPORDER (UserId) VALUES ($tempid)");
+        $conn->query("INSERT INTO TEMPORDER (UserId) VALUES ('$temp_customer')");
         // Fetch order ID
-        $fetch_orderId = $conn->query("SELECT TemporderId FROM TEMPORDER WHERE UserId = 2 ORDER BY TemporderId Desc");
+        $fetch_orderId = $conn->query("SELECT TemporderId FROM TEMPORDER WHERE UserId = '$temp_customer' ORDER BY TemporderId Desc");
 
         $orderId = ($fetch_orderId->fetch_assoc())['TemporderId'];
         echo($orderId);
