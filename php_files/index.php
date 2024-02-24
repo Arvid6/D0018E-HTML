@@ -102,17 +102,10 @@ echo("HALLÅ");
             echo($checkUser);
             $refresh_block = $conn->query($checkUser);
 
-
             if((!$refresh_block->num_rows > 0)) {
-                echo("skjjut mig");
                 $conn->query("INSERT INTO TEMPCART (UserId) VALUES ('$temp_customer')");
+
             }
-
-
-            // Query to get the products from database
-            $sql = "SELECT * FROM Product";
-            // Execute the query
-            $res = $conn->query($sql);
 
             if( isset($_GET['add']) )
             {
@@ -129,29 +122,25 @@ echo("HALLÅ");
                 $already_in_cart = $conn->query($already_in_cart_query);
 
                 if($already_in_cart->num_rows > 0) {
+                    $update_stock = "UPDATE Product SET Stock = Stock - 1 WHERE ProductId = $prod";
                     $update_quantity = "UPDATE TEMPCARTITEMS SET Amount = Amount + 1 WHERE TempcartId = $tempid AND ProductId = $prod";
+                    $conn->query($update_stock);
                     $conn->query($update_quantity);
 
                 }else {
+                    $update_stock = "UPDATE Product SET Stock = Stock - 1 WHERE ProductId = $prod";
                     $add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
+                    $conn->query($update_stock);
                     $conn->query($add_cart_item);
 
+
                 }
-
-                /*$add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
-                echo($add_cart_item);
-                if($conn->query($add_cart_item)) {
-                    echo("Item added to cart");
-                }else{
-                    echo("Error: couldn't add item to cart");
-                }*/
-                //then you can use them in a PHP function.
-                $result = add($prod);
-            }
-            function add($prod) {
-                echo "<script>console.log('$prod');</script>";
             }
 
+            // Query to get the products from database
+            $sql = "SELECT * FROM Product";
+            // Execute the query
+            $res = $conn->query($sql);
 
             if($res->num_rows > 0) {
 
@@ -165,10 +154,16 @@ echo("HALLÅ");
                         <td><?php echo $ProductName; ?></td>
                         <td><?php echo $Price; ?></td>
                         <td><?php echo $Stock; ?></td>
+                        <?php if($Stock > 0): ?>
                         <td><form method="Get" action="">
                             <input type="hidden" name="id" id="id" value="<?php echo $ProductId; ?>"/>
                             <input type="submit" name="add" class="button" value="Add to cart" />
                         </form></td>
+                        <?php else: ?>
+                        <td>
+                            <button class="button" disabled>Out of stock</button>
+                        </td>
+                        <?php endif; ?>
                     </tr>
                     <?php
                 }
