@@ -56,12 +56,12 @@ if(isset($_SESSION['userId'])){
     </style>
     <table id="clist">
 <?php
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$user_id'"); //Get Tempcart
+    $sql = $conn->query("SELECT cart_id FROM cart WHERE USERID = '$user_id'"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
-    $cartId = $fetch['TempcartId']; //Fetch the ID
+    $cartId = $fetch['cart_id']; //Fetch the ID
 
     //Get the product and the amount of each product grouped by ID
-    $lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
+    $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cartId GROUP BY product_id");
     $totPrice = 0;
 
     if( isset($_GET['co']) ){
@@ -72,13 +72,13 @@ if(isset($_SESSION['userId'])){
 if($lol->num_rows > 0) { //
     //Get all the id per product, calculate the total price and display everything in a table.
     while($row = $lol->fetch_assoc()) {
-        $ProductId = $row['ProductId'];
-        $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId"); //get the name from ID
+        $product_id = $row['product_id'];
+        $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_id"); //get the name from ID
         $fetch = $tName->fetch_assoc();
-        $Name = $fetch['ProductName'];
+        $Name = $fetch['product_name'];
         $TotalAmount = $row['TotalAmount'];
-        $Price = $fetch['Price']; // Needs to be dynamic cant be gotten as a pointer to the product like it is now
-        $totPrice += $Price * $TotalAmount;
+        $price = $fetch['price']; // Needs to be dynamic cant be gotten as a pointer to the product like it is now
+        $totprice += $price * $TotalAmount;
         ?>
         <tr>
             <td><?php echo $Name ; ?></td>
@@ -99,21 +99,21 @@ if($lol->num_rows > 0) { //
 
 if(isset($_GET['co'])) {
     // Add from cart to order, and delete the cart after
-    $lol = $conn->query("SELECT * FROM TEMPCARTITEMS  WHERE TempcartId = $cartId");
+    $lol = $conn->query("SELECT * FROM cart_items  WHERE cart_id = $cartId");
 
     if($lol->num_rows > 0) {
         // Add new order if there are items in the cart
-        $conn->query("INSERT INTO TEMPORDER (UserId) VALUES ('$user_id')");
+        $conn->query("INSERT INTO order (UserId) VALUES ('$user_id')");
         // Fetch order ID
-        $fetch_orderId = $conn->query("SELECT TemporderId FROM TEMPORDER WHERE UserId = '$user_id' ORDER BY TemporderId Desc");
+        $fetch_orderId = $conn->query("SELECT order_id FROM order WHERE UserId = '$user_id' ORDER BY order_id Desc");
 
-        $orderId = ($fetch_orderId->fetch_assoc())['TemporderId'];
+        $orderId = ($fetch_orderId->fetch_assoc())['order_id'];
         echo($orderId);
         while($row = $lol->fetch_assoc()) {
-            $ProductId = $row['ProductId'];
-            $Amount = $row['Amount'];
+            $product_id = $row['product_id'];
+            $quantity = $row['quantity'];
 
-            $qr = "INSERT INTO TEMPORDERITEM (TemporderId, ProductId, Amount, Price) VALUES ($orderId, $ProductId, $Amount, 500)";
+            $qr = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($orderId, $product_id, $quantity, 500)";
             echo($qr);
             $conn->query($qr);
             echo("HMMMMMMMMMM");
@@ -122,7 +122,7 @@ if(isset($_GET['co'])) {
         // Delete every cart item corresponding to the right user id
 
         echo($cartId);
-        $conn->query("DELETE FROM TEMPCARTITEMS WHERE TempcartId = $cartId");
+        $conn->query("DELETE FROM cart_items WHERE cart_idcart_id = $cartId");
         header("Refresh:0");
         echo("Order made!");
     }else {

@@ -36,12 +36,12 @@ if(isset($_SESSION['userId'])){
 
 <div id="minimeny">
     <?php
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$user_id'"); //Get Tempcart
+    $sql = $conn->query("SELECT cart_id FROM cart WHERE USERID = '$user_id'"); //Get cart
     $fetch = $sql->fetch_assoc();
-    $cartId = $fetch['TempcartId']; //Fetch the ID
+    $cartId = $fetch['cart_id']; //Fetch the ID
 
     //Get the product and the amount of each product grouped by ID
-    $lol = $conn->query("SELECT ProductId, SUM(Amount) as TotalAmount FROM TEMPCARTITEMS WHERE TempcartId = $cartId GROUP BY ProductId");
+    $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cartId GROUP BY product_id");
     ?>
     <div id="minimeny2">
         <button class="buttonaverage" ><a class="linkmeny" href="index.php">START</a></button>
@@ -57,10 +57,10 @@ if(isset($_SESSION['userId'])){
                 if($lol->num_rows > 0) { //
                 //Get all the id per product, calculate the total price and display everything in a table.
                 while($row = $lol->fetch_assoc()) {
-                    $ProductId = $row['ProductId'];
-                    $tName = $conn->query("SELECT * FROM Product WHERE ProductId = $ProductId"); //get the name from ID
+                    $product_id = $row['product_id'];
+                    $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_id"); //get the name from ID
                     $fetch = $tName->fetch_assoc();
-                    $Name = $fetch['ProductName'];
+                    $Name = $fetch['product_name'];
                     $TotalAmount = $row['TotalAmount'];
                     ?>
                 <a href="#"><?php echo $Name, " | ", $TotalAmount ; ?> </a>
@@ -98,12 +98,12 @@ if(isset($_SESSION['userId'])){
             <td>Buy</td>
         </tr>
             <?php
-            $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = '$user_id'";
+            $checkUser = "SELECT cart_id FROM cart WHERE UserId = '$user_id'";
             echo($checkUser);
             $refresh_block = $conn->query($checkUser);
 
             if((!$refresh_block->num_rows > 0)) {
-                $conn->query("INSERT INTO TEMPCART (UserId) VALUES ('$user_id')");
+                $conn->query("INSERT INTO cart (UserId) VALUES ('$user_id')");
 
             }
 
@@ -113,23 +113,29 @@ if(isset($_SESSION['userId'])){
                 $prod = htmlentities($_GET['id']);
 
                 // Select the right cart id
-                $ci = $conn->query("SELECT TempcartId FROM TEMPCART WHERE UserId = '$user_id'");
+                $ci = $conn->query("SELECT cart_id FROM cart WHERE UserId = '$user_id'");
                 $fetch = $ci->fetch_assoc();
-                $tempid = $fetch['TempcartId'];
+                $cart_id = $fetch['cart_id'];
 
                 // Check if the product already exists in the cart
-                $already_in_cart_query = "SELECT ProductId FROM TEMPCARTITEMS WHERE TempcartId = $tempid and ProductId = $prod";
+                $already_in_cart_query = "SELECT product_id FROM cart_items WHERE cart_id = $cart_id and product_id = $prod";
                 $already_in_cart = $conn->query($already_in_cart_query);
 
-                $update_stock = "UPDATE Product SET Stock = Stock - 1 WHERE ProductId = $prod";
+                // Get product price when clicked
+                $price_query = $conn->query("SELECT price FROM product WHERE product_id= $prod");
+                $fetch_price = $price_query->fetch_assoc();
+                $prod_price =$fetch_price['price'];
+
+                $update_stock = "UPDATE product SET stock = stock - 1 WHERE product_id = $prod";
 
                 if($already_in_cart->num_rows > 0) {
-                    $update_quantity = "UPDATE TEMPCARTITEMS SET Amount = Amount + 1 WHERE TempcartId = $tempid AND ProductId = $prod";
+                    $update_quantity = "UPDATE cart_items SET quantity = quantity + 1 WHERE cart_id = $cart_id AND product_id = $prod";
                     $conn->query($update_stock);
                     $conn->query($update_quantity);
 
                 }else {
-                    $add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
+                    $add_cart_item = "INSERT INTO cart_items (cart_id, product_id, quantity, price) VALUES($cart_id, $prod, 1, $prod_price)";
+                    echo($add_cart_item);
                     $conn->query($update_stock);
                     $conn->query($add_cart_item);
                 }
@@ -138,25 +144,25 @@ if(isset($_SESSION['userId'])){
             }
 
             // Query to get the products from database
-            $sql = "SELECT * FROM Product";
+            $sql = "SELECT * FROM product";
             // Execute the query
             $res = $conn->query($sql);
 
             if($res->num_rows > 0) {
 
                 while($row = $res->fetch_assoc()) {
-                    $ProductId = $row['ProductId'];
-                    $ProductName = $row['ProductName'];
-                    $Stock = $row['Stock'];
-                    $Price = $row['Price'];
+                    $product_id = $row['product_id'];
+                    $product_name = $row['product_name'];
+                    $stock = $row['stock'];
+                    $price = $row['price'];
                     ?>
                     <tr>
-                        <td><?php echo $ProductName; ?></td>
-                        <td><?php echo $Price; ?></td>
-                        <td><?php echo $Stock; ?></td>
-                        <?php if($Stock > 0): ?>
+                        <td><?php echo $product_name; ?></td>
+                        <td><?php echo $price; ?></td>
+                        <td><?php echo $stock; ?></td>
+                        <?php if($stock > 0): ?>
                         <td><form method="Get" action="">
-                            <input type="hidden" name="id" id="id" value="<?php echo $ProductId; ?>"/>
+                            <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
                             <input type="submit" name="add" class="button" value="Add to cart" />
                         </form></td>
                         <?php else: ?>
