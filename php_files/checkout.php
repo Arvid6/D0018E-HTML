@@ -14,6 +14,15 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 
+session_start();
+
+// Fetch user id if logged in, or get session id if not logged in.
+if(isset($_SESSION['userId'])){
+    $user_id = implode($_SESSION['userId']);
+}else{
+    $user_id = session_id();
+}
+
 
 ?>
 
@@ -47,12 +56,7 @@ echo "Connected successfully";
     </style>
     <table id="clist">
 <?php
-    echo("SGUGUGAUGAU");
-    session_start();
-    echo(session_id());
-    $temp_customer = session_id();
-    echo("HEJEJEJEJEJ");
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$temp_customer'"); //Get Tempcart
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$user_id'"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
     $cartId = $fetch['TempcartId']; //Fetch the ID
 
@@ -79,7 +83,6 @@ if($lol->num_rows > 0) { //
         <tr>
             <td><?php echo $Name ; ?></td>
             <td><?php echo $TotalAmount; ?></td>
-            <td><?php echo $temp_customer; ?></td>
         </tr>
             <?php
         }
@@ -96,14 +99,13 @@ if($lol->num_rows > 0) { //
 
 if(isset($_GET['co'])) {
     // Add from cart to order, and delete the cart after
-    $tempid = $_SESSION['temp_customer'];
     $lol = $conn->query("SELECT * FROM TEMPCARTITEMS  WHERE TempcartId = $cartId");
 
     if($lol->num_rows > 0) {
         // Add new order if there are items in the cart
-        $conn->query("INSERT INTO TEMPORDER (UserId) VALUES ('$temp_customer')");
+        $conn->query("INSERT INTO TEMPORDER (UserId) VALUES ('$user_id')");
         // Fetch order ID
-        $fetch_orderId = $conn->query("SELECT TemporderId FROM TEMPORDER WHERE UserId = '$temp_customer' ORDER BY TemporderId Desc");
+        $fetch_orderId = $conn->query("SELECT TemporderId FROM TEMPORDER WHERE UserId = '$user_id' ORDER BY TemporderId Desc");
 
         $orderId = ($fetch_orderId->fetch_assoc())['TemporderId'];
         echo($orderId);

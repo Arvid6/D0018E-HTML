@@ -14,7 +14,14 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 session_start();
-echo("HALLÅ");
+
+// Fetch user id if logged in, or get session id if not logged in.
+if(isset($_SESSION['userId'])){
+    $user_id = implode($_SESSION['userId']);
+
+}else{
+    $user_id = session_id();
+}
 ?>
 
 <!doctype html>
@@ -29,8 +36,7 @@ echo("HALLÅ");
 
 <div id="minimeny">
     <?php
-    $temp_customer = session_id();
-    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$temp_customer'"); //Get Tempcart
+    $sql = $conn->query("SELECT TempcartId FROM TEMPCART WHERE USERID = '$user_id'"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
     $cartId = $fetch['TempcartId']; //Fetch the ID
 
@@ -92,18 +98,12 @@ echo("HALLÅ");
             <td>Buy</td>
         </tr>
             <?php
-            #$_SESSION['temp_customer'] = 2;
-            #$hm = $_SESSION['temp_customer'];
-
-            $temp_customer = session_id();
-            echo($temp_customer);
-
-            $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = '$temp_customer'";
+            $checkUser = "SELECT TempcartId FROM TEMPCART WHERE UserId = '$user_id'";
             echo($checkUser);
             $refresh_block = $conn->query($checkUser);
 
             if((!$refresh_block->num_rows > 0)) {
-                $conn->query("INSERT INTO TEMPCART (UserId) VALUES ('$temp_customer')");
+                $conn->query("INSERT INTO TEMPCART (UserId) VALUES ('$user_id')");
 
             }
 
@@ -113,7 +113,7 @@ echo("HALLÅ");
                 $prod = htmlentities($_GET['id']);
 
                 // Select the right cart id
-                $ci = $conn->query("SELECT TempcartId FROM TEMPCART WHERE UserId = '$temp_customer'");
+                $ci = $conn->query("SELECT TempcartId FROM TEMPCART WHERE UserId = '$user_id'");
                 $fetch = $ci->fetch_assoc();
                 $tempid = $fetch['TempcartId'];
 
@@ -121,20 +121,20 @@ echo("HALLÅ");
                 $already_in_cart_query = "SELECT ProductId FROM TEMPCARTITEMS WHERE TempcartId = $tempid and ProductId = $prod";
                 $already_in_cart = $conn->query($already_in_cart_query);
 
+                $update_stock = "UPDATE Product SET Stock = Stock - 1 WHERE ProductId = $prod";
+
                 if($already_in_cart->num_rows > 0) {
-                    $update_stock = "UPDATE Product SET Stock = Stock - 1 WHERE ProductId = $prod";
                     $update_quantity = "UPDATE TEMPCARTITEMS SET Amount = Amount + 1 WHERE TempcartId = $tempid AND ProductId = $prod";
                     $conn->query($update_stock);
                     $conn->query($update_quantity);
 
                 }else {
-                    $update_stock = "UPDATE Product SET Stock = Stock - 1 WHERE ProductId = $prod";
                     $add_cart_item = "INSERT INTO TEMPCARTITEMS (TempcartId, ProductId, Amount) VALUES($tempid, $prod, 1)";
                     $conn->query($update_stock);
                     $conn->query($add_cart_item);
-
-
                 }
+                header("Location:index.php");
+
             }
 
             // Query to get the products from database
