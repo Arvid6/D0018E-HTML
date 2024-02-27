@@ -198,13 +198,7 @@ main p{
     margin-left: 25%;
     margin-top: 10%;
     font-size: large;
-    display: flex;
-}
-
-
-#chbutton{
-    margin-top: 40%;
-    display: flex;
+    display: block;
 }
 
 

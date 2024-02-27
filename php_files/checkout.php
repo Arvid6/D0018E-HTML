@@ -51,10 +51,12 @@ if(isset($_SESSION['userId'])){
         table, th, td {
             border: 1px solid black;
             font-size: larger;
-            margin: 0 auto;
+            height: 1%;
+            height: 60px;
+            width: 15%;
         }
     </style>
-    <table id="clist">
+    <table >
 <?php
     $sql = $conn->query("SELECT cart_id FROM cart WHERE USERID = '$user_id'"); //Get Tempcart
     $fetch = $sql->fetch_assoc();
@@ -62,7 +64,7 @@ if(isset($_SESSION['userId'])){
 
     //Get the product and the amount of each product grouped by ID
     $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cartId GROUP BY product_id");
-    $totPrice = 0;
+    $totprice = 0;
 
     if( isset($_GET['co']) ){
         $prod = htmlentities($_GET['data']);
@@ -87,11 +89,12 @@ if($lol->num_rows > 0) { //
             <?php
         }
         ?>
-    </table>
+    </table><br><br><br>
+
     <form method="Get" action="" id="chbutton">
-        <h1>TOTAL COST: <?php echo $totPrice ?></h1>
+        <h1>TOTAL COST: <?php echo $totprice ?></h1>
         <input type="hidden" name="data" id="data" value="<?php ?>"/>
-        <input type="submit" name="co" class="button" value="CHECK-OUT" />
+        <input type="submit" name="co" class="button" id="chout" value="CHECK-OUT" />
     </form>
         <?php
 }
