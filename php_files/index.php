@@ -16,12 +16,36 @@ echo "Connected successfully";
 session_start();
 
 // Fetch user id if logged in, or get session id if not logged in.
+
 if(isset($_SESSION['userId'])){
     $user_id = implode($_SESSION['userId']);
 
+    $checkUser = "SELECT cart_id FROM cart WHERE UserId = $user_id";
+    $refresh_block = $conn->query($checkUser);
+    if((!$refresh_block->num_rows > 0)) {
+        $conn->query("INSERT INTO cart (UserId) VALUES ($user_id)");
+        echo("Ingen vagn");
+    }
+    // Fetch the user cart id
+    $sql = $conn->query("SELECT cart_id FROM cart WHERE UserId = $user_id");
+    $fetch = $sql->fetch_assoc();
+    $cart_id = $fetch['cart_id'];
+
 }else{
-    $user_id = session_id();
+    $session_id = session_id();
+
+    $check_session = "SELECT cart_id FROM cart WHERE session_id = '$session_id'";
+    $q = $conn->query($check_session);
+    if((!$q->num_rows>0)) {
+        $conn->query("INSERT INTO cart (session_id) VALUES ('$session_id')");
+    }
+    // Fetch the session cart id
+    $sql = $conn->query("SELECT cart_id FROM cart WHERE session_id = '$session_id'");
+    $fetch = $sql->fetch_assoc();
+    $cart_id = $fetch['cart_id'];
 }
+$_SESSION["cart_id"] = $cart_id;
+
 ?>
 
 <!doctype html>
@@ -36,12 +60,7 @@ if(isset($_SESSION['userId'])){
 
 <div id="minimeny">
     <?php
-    $sql = $conn->query("SELECT cart_id FROM cart WHERE USERID = '$user_id'"); //Get cart
-    $fetch = $sql->fetch_assoc();
-    $cartId = $fetch['cart_id']; //Fetch the ID
-
-    //Get the product and the amount of each product grouped by ID
-    $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cartId GROUP BY product_id");
+    $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cart_id GROUP BY product_id");
     ?>
     <div id="minimeny2">
         <button class="buttonaverage" ><a class="linkmeny" href="index.php">START</a></button>
@@ -98,24 +117,12 @@ if(isset($_SESSION['userId'])){
             <td>Buy</td>
         </tr>
             <?php
-            $checkUser = "SELECT cart_id FROM cart WHERE UserId = '$user_id'";
-            echo($checkUser);
-            $refresh_block = $conn->query($checkUser);
 
-            if((!$refresh_block->num_rows > 0)) {
-                $conn->query("INSERT INTO cart (UserId) VALUES ('$user_id')");
-
-            }
 
             if( isset($_GET['add']) )
             {
                 //be sure to validate and clean your variables
                 $prod = htmlentities($_GET['id']);
-
-                // Select the right cart id
-                $ci = $conn->query("SELECT cart_id FROM cart WHERE UserId = '$user_id'");
-                $fetch = $ci->fetch_assoc();
-                $cart_id = $fetch['cart_id'];
 
                 // Check if the product already exists in the cart
                 $already_in_cart_query = "SELECT product_id FROM cart_items WHERE cart_id = $cart_id and product_id = $prod";

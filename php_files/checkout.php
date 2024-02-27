@@ -16,12 +16,7 @@ echo "Connected successfully";
 
 session_start();
 
-// Fetch user id if logged in, or get session id if not logged in.
-if(isset($_SESSION['userId'])){
-    $user_id = implode($_SESSION['userId']);
-}else{
-    $user_id = session_id();
-}
+$cart_id = $_SESSION['cart_id'];
 
 
 ?>
@@ -58,12 +53,8 @@ if(isset($_SESSION['userId'])){
     </style>
     <table >
 <?php
-    $sql = $conn->query("SELECT cart_id FROM cart WHERE USERID = '$user_id'"); //Get Tempcart
-    $fetch = $sql->fetch_assoc();
-    $cartId = $fetch['cart_id']; //Fetch the ID
-
     //Get the product and the amount of each product grouped by ID
-    $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cartId GROUP BY product_id");
+    $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cart_id GROUP BY product_id");
     $totprice = 0;
 
     if( isset($_GET['co']) ){
@@ -102,16 +93,30 @@ if($lol->num_rows > 0) { //
 
 if(isset($_GET['co'])) {
     // Add from cart to order, and delete the cart after
-    $lol = $conn->query("SELECT * FROM cart_items  WHERE cart_id = $cartId");
+    $lol = $conn->query("SELECT * FROM cart_items  WHERE cart_id = $cart_id");
 
+    // Add new order if there are items in the cart
     if($lol->num_rows > 0) {
-        // Add new order if there are items in the cart
-        $conn->query("INSERT INTO order (UserId) VALUES ('$user_id')");
-        // Fetch order ID
-        $fetch_orderId = $conn->query("SELECT order_id FROM order WHERE UserId = '$user_id' ORDER BY order_id Desc");
+
+        if(isset($_SESSION['userId'])) {
+            echo("Inloggad");
+            $user_id = implode($_SESSION['userId']);
+            $tbi = "INSERT INTO `order` (UserId) VALUES ($user_id)";
+            $conn->query($tbi);
+            // Fetch order ID
+            $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE UserId = $user_id ORDER BY order_id Desc");
+
+        }else{
+            $session_id = session_id();
+            echo("utloggad");
+            $conn->query("INSERT INTO `order` (session_id) VALUES ('$session_id')");
+            // Fetch order ID
+            $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE session_id = '$session_id' ORDER BY order_id Desc");
+
+        }
 
         $orderId = ($fetch_orderId->fetch_assoc())['order_id'];
-        echo($orderId);
+
         while($row = $lol->fetch_assoc()) {
             $product_id = $row['product_id'];
             $quantity = $row['quantity'];
@@ -123,9 +128,7 @@ if(isset($_GET['co'])) {
         }
 
         // Delete every cart item corresponding to the right user id
-
-        echo($cartId);
-        $conn->query("DELETE FROM cart_items WHERE cart_idcart_id = $cartId");
+        $conn->query("DELETE FROM cart_items WHERE cart_id = $cart_id");
         header("Refresh:0");
         echo("Order made!");
     }else {
