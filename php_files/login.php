@@ -56,10 +56,10 @@ if (isset($_SESSION["login"])) {
                 if (password_verify($uPassword, $user["password"])) {
                     // Get
                     $getUserId = "SELECT userId FROM User WHERE email = '$email'";
-                    $getuserType = "SELECT userType FROM User WHERE email = '$email'";
+                    $getUserType = "SELECT userType FROM User WHERE email = '$email'";
                     $idResult = $conn -> query($getUserId);
                     $userId = mysqli_fetch_array($idResult, MYSQLI_NUM);
-                    $uTypeResult = $conn -> query($getuserType);
+                    $uTypeResult = $conn -> query($getUserType);
                     $userType = mysqli_fetch_array($uTypeResult, MYSQLI_NUM);
                     session_start();
                     $_SESSION["userType"] = $userType;
