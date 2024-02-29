@@ -6,7 +6,7 @@
     include("connect.php"); 
 
    
-    
+    // hämtadd från index till rad 68
 if(isset($_SESSION['userId'])){
     $user_id = implode($_SESSION['userId']);
 
@@ -16,7 +16,7 @@ if(isset($_SESSION['userId'])){
         $conn->query("INSERT INTO cart (UserId) VALUES ($user_id)");
         echo("Ingen vagn");
     }
-    // Fetch the user cart id
+    
     $sql = $conn->query("SELECT cart_id FROM cart WHERE UserId = $user_id");
     $fetch = $sql->fetch_assoc();
     $cart_id = $fetch['cart_id'];
@@ -29,7 +29,7 @@ if(isset($_SESSION['userId'])){
     if((!$q->num_rows>0)) {
         $conn->query("INSERT INTO cart (session_id) VALUES ('$session_id')");
     }
-    // Fetch the session cart id
+   
     $sql = $conn->query("SELECT cart_id FROM cart WHERE session_id = '$session_id'");
     $fetch = $sql->fetch_assoc();
     $cart_id = $fetch['cart_id'];
@@ -39,14 +39,12 @@ $product_id = $_GET['id'];
 
 if( isset($_GET['add']) )
             {
-                //be sure to validate and clean your variables
+                
                 $prod = htmlentities($_GET['id']);
 
-                // Check if the product already exists in the cart
                 $already_in_cart_query = "SELECT product_id FROM cart_items WHERE cart_id = $cart_id and product_id = $prod";
                 $already_in_cart = $conn->query($already_in_cart_query);
 
-                // Get product price when clicked
                 $price_query = $conn->query("SELECT price FROM product WHERE product_id= $prod");
                 $fetch_price = $price_query->fetch_assoc();
                 $prod_price =$fetch_price['price'];
@@ -64,7 +62,7 @@ if( isset($_GET['add']) )
                     $conn->query($update_stock);
                     $conn->query($add_cart_item);
                 }
-                header("Location:extrasidor.php?id=$product_id");
+                header("Location:extrasidor.php?id=$product_id"); // det ända som behövde ändras
 
             }
 
