@@ -66,18 +66,9 @@ $_SESSION["cart_id"] = $cart_id;
     </div>
 
     <div id="text">
-        <p>Produkter </p>
-        <style>
-            table, th, td {
-                border: 1px solid black;
-            }
-        </style>
         <table>
         <tr>
-            <td>Namn</td>
-            <td>Pris</td>
-            <td>Lagerstatus</td>
-            <td>Buy</td>
+            <h2>Produkter:</h2>
         </tr>
             <?php
 
@@ -125,22 +116,18 @@ $_SESSION["cart_id"] = $cart_id;
                     $product_name = $row['product_name'];
                     $stock = $row['stock'];
                     $price = $row['price'];
+                    $img = "img/" . $product_name . ".png";
                     ?>
+
                     <tr>
-                        <td><?php echo $product_name; ?></td>
-                        <td><?php echo $price; ?></td>
-                        <td><?php echo $stock; ?></td>
-                        <?php if($stock > 0): ?>
-                        <td><form method="Get" action="">
-                            <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
-                            <input type="submit" name="add" class="button" value="Add to cart" />
-                        </form></td>
+                        <td><img src="<?php echo $img?>" height="100px" width="100px"><br><strong><?php echo $product_name ; ?> </strong><br><?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small><?php if($stock > 0): ?>
+                        <form method="Get" action="">
+                                <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
+                                <input type="submit" name="add" class="button" value="Add to cart" />
+                            </form>
                         <?php else: ?>
-                        <td>
                             <button class="button" disabled>Out of stock</button>
-                        </td>
                         <?php endif; ?>
-                    </tr>
                     <?php
                 }
             }

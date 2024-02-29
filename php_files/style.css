@@ -176,7 +176,7 @@ main p{
 #storbild{
     height: 500px;
     overflow: hidden;
-    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url(img/rose.jpeg);
+    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url(img/Rosfrön.png);
     
     background-repeat: no-repeat;
     background-size: 100% 1000px;

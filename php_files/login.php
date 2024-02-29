@@ -54,10 +54,15 @@ if (isset($_SESSION["login"])) {
             $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
             if ($user) {
                 if (password_verify($uPassword, $user["password"])) {
+                    // Get
                     $getUserId = "SELECT userId FROM User WHERE email = '$email'";
+                    $getuserType = "SELECT userType FROM User WHERE email = '$email'";
                     $idResult = $conn -> query($getUserId);
                     $userId = mysqli_fetch_array($idResult, MYSQLI_NUM);
+                    $uTypeResult = $conn -> query($getuserType);
+                    $userType = mysqli_fetch_array($uTypeResult, MYSQLI_NUM);
                     session_start();
+                    $_SESSION["userType"] = $userType;
                     $_SESSION["login"] = true;
                     $_SESSION["userId"] = $userId;
                     header("Location: index.php");
