@@ -19,15 +19,16 @@ $cart_id = $_SESSION['cart_id'];
 <main>
     <div id="order">
     <style>
+        table{
+            border: black 1px;
+        }
         table, th, td {
-            border: 1px solid black;
             font-size: larger;
             height: 1%;
-            height: 60px;
-            width: 15%;
+            width: 10%;
         }
     </style>
-    <table >
+    <table>
 <?php
     //Get the product and the amount of each product grouped by ID
     $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cart_id GROUP BY product_id");
@@ -48,10 +49,11 @@ if($lol->num_rows > 0) { //
         $TotalAmount = $row['TotalAmount'];
         $price = $fetch['price']; // Needs to be dynamic cant be gotten as a pointer to the product like it is now
         $totprice += $price * $TotalAmount;
+        $img = "img/" . $Name . ".png";
         ?>
         <tr>
-            <td><?php echo $Name ; ?></td>
-            <td><?php echo $TotalAmount; ?></td>
+            <td><img src="<?php echo $img?>" height="100px" width="100px"></td>
+            <td><strong><?php echo $Name ; ?> </strong><br><?php echo $TotalAmount . "st" ?> <br> <small> <?php echo $price * $TotalAmount . "kr"?> </small></td>
         </tr>
             <?php
         }
