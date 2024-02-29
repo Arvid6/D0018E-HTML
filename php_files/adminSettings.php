@@ -80,7 +80,7 @@ $cart_id = $_SESSION['cart_id'];
     <div class="productList">
         <?php
             $sql = "SELECT * FROM product";
-            $productRes = $conn -> query(sql);
+            $productRes = $conn -> query($sql);
 
             if($productRes->num_rows > 0) {
                 while($row = $productRes->fetch_assoc()) {
