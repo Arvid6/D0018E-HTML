@@ -30,15 +30,8 @@ $cart_id = $_SESSION['cart_id'];
 </head>
 
 <body>
-<header>
-    <nav>
-        <ul>
-            <li><a class="link" href="index.php">START</a></li>
-            <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><a class="link" href="login.php">SIGN IN</a></li>
-        </ul>
-    </nav>
-</header>
+    
+<?php include("onatop.php"); ?>
 
 <main>
     <div id="order">

@@ -205,10 +205,11 @@ main p{
 /*END Checkout*/
 
 /*Register and login*/
-
+/*
 .registerBody{
     padding: 50px;
 }
+*/
 .reg{
     max-width: 600px;
     margin: 0 auto;
