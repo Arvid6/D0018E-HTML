@@ -116,10 +116,9 @@ $_SESSION["cart_id"] = $cart_id;
                     $price = $row['price'];
                     $img = "img/" . $product_name . ".png";
                     ?>
-                
-                    <tr>
-                        <td><img src="<?php echo $img?>" height="100px" width="100px"><br>
-                            <strong><a href="extrasidor.php?id=<?php echo $product_id; ?>"><?php echo $product_name ; ?></a></strong><br>
+                    <div class="procuct">
+                        <a href="extrasidor.php?id=<?php echo $product_id; ?>" style="color: black; text-decoration: none;"><img src="<?php echo $img?>" height="100px" width="100px"><br>
+                            <strong><?php echo $product_name ; ?></a></strong><br>
                             <?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small>
                             <?php if($stock > 0): ?>
                                 <form method="Get" action="">
@@ -129,13 +128,12 @@ $_SESSION["cart_id"] = $cart_id;
                             <?php else: ?>
                                 <button class="button" disabled>Out of stock</button>
                             <?php endif; ?>
-                    </tr>
+                    </div>
                     <?php
                 }
                 
             }
             ?>
-        </table>
 
     </div>
 
