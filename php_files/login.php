@@ -1,13 +1,15 @@
 <?php
 
 session_start();
+ include("connect.php"); 
+$cart_id = $_SESSION['cart_id'];
+
 if (isset($_SESSION["login"])) {
     header("Location: index.php");
 }
 
 ?>
 
-<?php include("connect.php"); ?>
 
 <!DOCTYPE html>
 

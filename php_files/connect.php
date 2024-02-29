@@ -14,6 +14,5 @@ die("Connection failed: " . $conn->connect_error);
 }
 echo "Connected successfully";
 
-$cart_id = $_SESSION['cart_id'];
 
 ?>

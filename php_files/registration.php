@@ -1,6 +1,7 @@
 <?php
-
 session_start();
+include("connect.php"); 
+$cart_id = $_SESSION['cart_id'];
 if (isset($_SESSION["login"])) {
     header("Location: index.php");
 }
@@ -17,15 +18,9 @@ if (isset($_SESSION["login"])) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="registerBody">
-<header>
-    <nav>
-        <ul>
-            <li><a class="link" href="index.php">START</a></li>
-            <li><a class="link" href="checkout.php">CHECKOUT</a></li>
-            <li><a class="link" href="login.php">SIGN IN</a></li>
-        </ul>
-    </nav>
-</header>
+
+<?php include("onatop.php"); ?>
+
 <br><br><br>
 <div class="reg">
         <?php
