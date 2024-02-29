@@ -53,7 +53,7 @@ $_SESSION["cart_id"] = $cart_id;
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Eden</title>
+    <title>Fron.se</title>
 </head>
 
 <body>
@@ -66,10 +66,8 @@ $_SESSION["cart_id"] = $cart_id;
     </div>
 
     <div id="text">
-        <table>
-        <tr>
-            <h2>Produkter:</h2>
-        </tr>
+          <h2>Produkter: </h2>
+        <div id="produclist">
             <?php
 
 
@@ -118,9 +116,8 @@ $_SESSION["cart_id"] = $cart_id;
                     $price = $row['price'];
                     $img = "img/" . $product_name . ".png";
                     ?>
-
-                    <tr>
-                        <td><img src="<?php echo $img?>" height="100px" width="100px"><br><strong><?php echo $product_name ; ?> </strong><br><?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small><?php if($stock > 0): ?>
+                        <div class="procuct">
+                    <img src="<?php echo $img?>" height="100px" width="100px"><br><strong><?php echo $product_name ; ?> </strong><br><?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small><?php if($stock > 0): ?>
                         <form method="Get" action="">
                                 <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
                                 <input type="submit" name="add" class="button" value="Add to cart" />
@@ -128,12 +125,12 @@ $_SESSION["cart_id"] = $cart_id;
                         <?php else: ?>
                             <button class="button" disabled>Out of stock</button>
                         <?php endif; ?>
+                        </div>
                     <?php
                 }
             }
             ?>
-        </table>
-
+        </div>
     </div>
 
     <div id="container">

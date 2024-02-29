@@ -168,6 +168,16 @@ main p{
     margin: auto;
 }
 
+#produclist{
+    width: 70%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.procuct{
+    width: 30%;
+}
+
 .bilda{
     width: 45%;
     margin: 1%;
