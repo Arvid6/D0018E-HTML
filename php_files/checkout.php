@@ -1,25 +1,4 @@
-<?php
-
-$servername = "utbweb.its.ltu.se";
-$username = "19990921";
-$password = "Projekt99!";
-$dbname = "db19990921";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-echo "Connected successfully";
-
-session_start();
-
-$cart_id = $_SESSION['cart_id'];
-
-
-?>
+<?php include("connect.php"); ?>
 
 <!doctype html>
 <html>
@@ -30,7 +9,7 @@ $cart_id = $_SESSION['cart_id'];
 </head>
 
 <body>
-    
+
 <?php include("onatop.php"); ?>
 
 <main>

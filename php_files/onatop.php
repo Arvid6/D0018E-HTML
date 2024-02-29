@@ -35,5 +35,10 @@
                 <button class="buttonaverage"><a href="checkout.php">CHECKOUT</a></button>
             </div>
         </div>
+        <?php
+        if (isset($_SESSION["userType"]) && $_SESSION["userType"] == 1) { ?>
+        <button class="buttonaverage" ><a class="linkmeny" href="adminSettings.php">Admin</a></button>
+        <?php } ?>
+
     </div>
 </div>
