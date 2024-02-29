@@ -1,4 +1,5 @@
 <div id="minimeny">
+    
     <?php
     $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cart_id GROUP BY product_id");
     ?>
@@ -36,8 +37,9 @@
             </div>
         </div>
         <?php
-        if (isset($_SESSION["userType"]) && $_SESSION["userType"] == 1) { ?>
-        <button class="buttonaverage" ><a class="linkmeny" href="adminSettings.php">Admin</a></button>
+        if (isset($_SESSION["userType"]) && $_SESSION['userType'][0] == "1")  { 
+            ?>
+            <button class="buttonaverage" ><a class="linkmeny" href="adminSettings.php">Admin</a></button>
         <?php } ?>
 
     </div>
