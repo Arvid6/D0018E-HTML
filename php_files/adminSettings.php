@@ -11,7 +11,7 @@ $cart_id = $_SESSION['cart_id'];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Admin Settings</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -26,20 +26,21 @@ $cart_id = $_SESSION['cart_id'];
         if (isset($_POST["addProduct"])){
             ini_set('display_errors', 1);
             error_reporting(E_ALL);
-            global $conn;
             $productName = $_POST["productName"];
-            $price = $_POST["productPrice"];
-            $stock = $_POST["stock"];
+            $price = floatval($_POST["productPrice"]);
+            $stock = intval($_POST["stock"]);
 
             $errors = array();
 
             if (empty($productName) or empty($price) or empty($stock)) {
                 array_push($errors, "All fields need to be filled in");
             }
-            if(!is_int($price)) {
+            if(!is_float($price)) {
+                print_r($price);
                 array_push($errors, "Input must be a number");
             }
             if(!is_int($stock)) {
+                print_r($stock);
                 array_push($errors, "Input must be a number");
             }
 
@@ -55,7 +56,7 @@ $cart_id = $_SESSION['cart_id'];
                 $stmt = $conn -> stmt_init();
                 $prepareStmt = $stmt -> prepare($sql);
                 if ($prepareStmt) {
-                    $stmt -> bind_param("sii",$productName,$price, $stock);
+                    $stmt -> bind_param("sdi",$productName,$price, $stock);
                     $stmt -> execute();
                     echo "<div>Product added successfully</div>";
                 }else{
@@ -69,7 +70,7 @@ $cart_id = $_SESSION['cart_id'];
                 <input type="text" placeholder="Product Name" name="productName">
             </div>
             <div class="addProduct-group">
-                <input type="number" placeholder="Product Price" name="productPrice">
+                <input type="number" placeholder="Product Price" step="0.01" name="productPrice">
             </div>
             <div class="addProduct-group">
                 <input type="number" placeholder="Stock" name="stock">
