@@ -53,7 +53,7 @@ $_SESSION["cart_id"] = $cart_id;
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Eden</title>
+    <title>Fron.se</title>
 </head>
 
 <body>
