@@ -44,9 +44,6 @@ $cart_id = $_SESSION['cart_id'];
                 array_push($errors, "Input must be a number");
             }
 
-            //require_once "connect.php";
-
-
             if (count($errors) > 0) {
                 foreach ($errors as $error) {
                     echo "<div>$error</div>";
@@ -79,6 +76,37 @@ $cart_id = $_SESSION['cart_id'];
                 <input type="submit" VALUE="Add Product" name="addProduct">
             </div>
         </form>
+    </div>
+    <div class="productList">
+        <?php
+            $sql = "SELECT * FROM product";
+            $productRes = $conn -> query(sql);
+
+            if($productRes->num_rows > 0) {
+                while($row = $productRes->fetch_assoc()) {
+                    $product_id = $row['product_id'];
+                    $product_name = $row['product_name'];
+                    $stock = $row['stock'];
+                    $price = $row['price'];
+                    $img = "img/" . $product_name . ".png";
+                    ?>
+                    <div class="adminProduct">
+                        <a href="extrasidor.php?id=<?php echo $product_id; ?>" style="color: black; text-decoration: none;"><img src="<?php echo $img?>" height="100px" width="100px"><br>
+                            <strong><?php echo $product_name ; ?></a></strong><br>
+                        <?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small>
+                        <?php if($stock > 0): ?>
+                            <form method="Get" action="">
+                                <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
+                                <input type="submit" name="add" class="button" value="Add to cart" />
+                            </form>
+                        <?php else: ?>
+                            <button class="button" disabled>Out of stock</button>
+                        <?php endif; ?>
+                    </div>
+                    <?php
+                }
+            }
+        ?>
     </div>
 </body>
 </html>
