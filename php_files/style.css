@@ -233,7 +233,49 @@ main p{
 /*END Register and login*/
 
 
+/* 
+Extrasidor css
+*/
 
+#imageextra {
+    display: block;
+    margin: 0 auto;
+    border-radius: 15px;
+}
 
+#priceextra, #stockextra {
+    text-align: center;
+    font-size: 1.2em;
+    color: #333;
+}
 
+.buttonextra {
+    display: block;
+    width: 200px;
+    height: 50px;
+    margin: 20px auto;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.buttonextra:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+#imageextra,
+#priceextra,
+#stockextra,
+#idextra {
+    font-family: Arial, sans-serif;
+}
 

@@ -27,17 +27,17 @@
             ?>
 
             <h1><?php echo $product_name; ?></h1>
-            <img src="<?php echo $img?>" height="300px" width="300px">
-            <p>Price: <?php echo $price . "kr"; ?></p>
-            <p>Stock: <?php echo $stock; ?></p>
+            <img src="<?php echo $img?>" id="imageextra" height="300px" width="300px">
+            <p id="priceextra">Price: <?php echo $price . "kr"; ?></p>
+            <p id="stockextra">Stock: <?php echo $stock; ?></p>
 
             <?php if($stock > 0): ?>
                 <form method="Get" action="">
-                    <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
-                    <input type="submit" name="add" class="button" value="Add to cart" />
+                    <input type="hidden" name="id" id="idextra" value="<?php echo $product_id; ?>"/>
+                    <input type="submit" name="add" class="buttonextra" value="Add to cart" />
                 </form>
             <?php else: ?>
-                <button class="button" disabled>Out of stock</button>
+                <button class="buttonextra" disabled>Out of stock</button>
             <?php endif; ?>
 
             <?php
