@@ -72,7 +72,7 @@ $cart_id = $_SESSION['cart_id'];
                 <input type="number" placeholder="Product Price" name="productPrice">
             </div>
             <div class="addProduct-group">
-                <input type="number" VALUE="Stock" name="stock">
+                <input type="number" placeholder="Stock" name="stock">
             </div>
             <div class="addProduct-submit">
                 <input type="submit" VALUE="Add Product" name="addProduct">
