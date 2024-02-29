@@ -12,43 +12,26 @@ if (isset($_SESSION["login"])) {
 
 
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
-
-<html lang="en">
-
 
 <?php include("onatop.php"); ?>
 
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
 <body class="registerBody">
-
-<br><br><br>
+    <br><br><br>
     <div class="reg">
         <?php
         global $conn;
         if (isset($_POST["login"])) {
             $email = $_POST["email"];
             $uPassword = $_POST["password"];
-            require_once "connect.php";
+            //require_once "connect.php";
             $emailCheck = "SELECT * FROM User WHERE email = '$email'";
             $result = $conn -> query($emailCheck);
             $user = mysqli_fetch_array($result, MYSQLI_ASSOC);

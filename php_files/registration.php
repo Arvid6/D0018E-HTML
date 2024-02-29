@@ -53,7 +53,7 @@ if (isset($_SESSION["login"])) {
             if ($uPassword != $passwordRepeat) {
                 array_push($errors, "Password does not match");
             }
-            require_once "connect.php";
+            //require_once "connect.php";
             $emailCheck = "SELECT * FROM User WHERE email = '$email'";
             $result = $conn -> query($emailCheck);
             $emailAmount = $result -> num_rows;
