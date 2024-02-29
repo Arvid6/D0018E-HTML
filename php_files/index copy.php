@@ -53,7 +53,7 @@ $_SESSION["cart_id"] = $cart_id;
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Fron.se</title>
+    <title>Eden</title>
 </head>
 
 <body>
@@ -66,8 +66,10 @@ $_SESSION["cart_id"] = $cart_id;
     </div>
 
     <div id="text">
-          <h2>Produkter: </h2>
-        <div id="produclist">
+        <table>
+        <tr>
+            <h2>Produkter:</h2>
+        </tr>
             <?php
 
 
@@ -155,3 +157,9 @@ $_SESSION["cart_id"] = $cart_id;
 <script text="text/javscript" src="script.js"></script>
 </body>
 </html>
+
+
+
+
+
+
