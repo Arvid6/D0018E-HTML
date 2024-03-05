@@ -34,7 +34,8 @@ if(isset($_SESSION['userId'])){
     $fetch = $sql->fetch_assoc();
     $cart_id = $fetch['cart_id'];
 }
-$product_id = $_GET['id']; 
+
+$product_id = $_GET['id'];
 
 
 if( isset($_GET['add']) )
@@ -66,39 +67,34 @@ if( isset($_GET['add']) )
 
             }
 
-    include("onatop.php"); 
-
+    include("onatop.php");
     $sql = "SELECT * FROM product WHERE product_id = $product_id";
     $res = $conn->query($sql);
+    $fetch = $res->fetch_assoc();
 
-    if ($res->num_rows > 0) {
-  
-        while($row = $res->fetch_assoc()) {
-            $product_name = $row['product_name'];
-            $stock = $row['stock'];
-            $price = $row['price'];
-            $img = "img/" . $product_name . ".png";
-            ?>
+    $product_name = $fetch['product_name'];
+    $stock = $fetch['stock'];
+    $price = $fetch['price'];
+    $product_info = $fetch['product_info'];
+    $img = "img/" . $product_name . ".png";
+    ?>
 
-            <h1><?php echo $product_name; ?></h1>
-            <img src="<?php echo $img?>" id="imageextra" height="300px" width="300px">
-            <p id="priceextra">Price: <?php echo $price . "kr"; ?></p>
-            <p id="stockextra">Stock: <?php echo $stock; ?></p>
+    <h1 id="nameextra"><?php echo $product_name; ?></h1>
+    <img src="<?php echo $img?>" id="imageextra" height="300px" width="300px">
+    <p id="priceextra">Price: <?php echo $price . "kr"; ?></p>
+    <p id="stockextra">Stock: <?php echo $stock; ?></p>
 
-            <?php if($stock > 0): ?>
-                <form method="Get" action="">
-                    <input type="hidden" name="id" id="idextra" value="<?php echo $product_id; ?>"/>
-                    <input type="submit" name="add" class="buttonextra" value="Add to cart" />
-                </form>
-            <?php else: ?>
-                <button class="buttonextra" disabled>Out of stock</button>
-            <?php endif; ?>
+    <?php if($stock > 0): ?>
+        <form method="Get" action="">
+            <input type="hidden" name="id" id="idextra" value="<?php echo $product_id; ?>"/>
+            <input type="submit" name="add" class="buttonextra" value="Add to cart" />
+        </form>
+    <?php else: ?>
+        <button class="buttonextra" disabled>Out of stock</button>
+    <?php endif; ?>
+    <p id="infoextra"><small><?php echo $product_info?></small></p>
+    <?php
 
-            <?php
-        }
-    } else {
-        echo "0 results";
-    }
     $conn->close();
 ?>
 <head>

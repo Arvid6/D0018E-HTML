@@ -126,6 +126,7 @@ $_SESSION["cart_id"] = $cart_id;
                                     <input type="submit" name="add" class="button" value="Add to cart" />
                                 </form>
                             <?php else: ?>
+                                <br>
                                 <button class="button" disabled>Out of stock</button>
                             <?php endif; ?>
                     </div>

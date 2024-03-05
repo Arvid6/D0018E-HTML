@@ -17,8 +17,8 @@
                 if($lol->num_rows > 0) { //
                 //Get all the id per product, calculate the total price and display everything in a table.
                 while($row = $lol->fetch_assoc()) {
-                    $product_id = $row['product_id'];
-                    $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_id"); //get the name from ID
+                    $product_ids = $row['product_id'];
+                    $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_ids"); //get the name from ID
                     $fetch = $tName->fetch_assoc();
                     $Name = $fetch['product_name'];
                     $TotalAmount = $row['TotalAmount'];
