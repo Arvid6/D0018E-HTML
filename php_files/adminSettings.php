@@ -29,10 +29,11 @@ $cart_id = $_SESSION['cart_id'];
             $productName = $_POST["productName"];
             $price = floatval($_POST["productPrice"]);
             $stock = intval($_POST["stock"]);
+            $productInfo = $_POST["productInfo"];
 
             $errors = array();
 
-            if (empty($productName) or empty($price) or empty($stock)) {
+            if (empty($productName) or empty($price) or empty($stock) or empty($productInfo)) {
                 array_push($errors, "All fields need to be filled in");
             }
             if(!is_float($price)) {
@@ -49,11 +50,11 @@ $cart_id = $_SESSION['cart_id'];
                     echo "<div>$error</div>";
                 }
             }else{
-                $sql = "INSERT INTO product (product_name, price, stock) VALUES (?,?,?)";
+                $sql = "INSERT INTO product (product_name, price, stock, product_info) VALUES (?,?,?)";
                 $stmt = $conn -> stmt_init();
                 $prepareStmt = $stmt -> prepare($sql);
                 if ($prepareStmt) {
-                    $stmt -> bind_param("sdi",$productName,$price, $stock);
+                    $stmt -> bind_param("sdis",$productName,$price, $stock, $productInfo);
                     $stmt -> execute();
                     echo "<div>Product added successfully</div>";
                 }else{
@@ -71,6 +72,9 @@ $cart_id = $_SESSION['cart_id'];
             </div>
             <div class="addProduct-group">
                 <input type="number" placeholder="Stock" name="stock">
+            </div>
+            <div class="addProduct-group">
+                <input type="text" placeholder="Product Info" name="productInfo">
             </div>
             <div class="addProduct-submit">
                 <input type="submit" VALUE="Add Product" name="addProduct">
