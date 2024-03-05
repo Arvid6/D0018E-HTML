@@ -46,6 +46,25 @@ if(isset($_SESSION['userId'])){
 }
 $_SESSION["cart_id"] = $cart_id;
 
+// Get stock status for your session
+if(isset($_SESSION['session_stock'])) {
+    $session_stock = $_SESSION['session_stock'];
+
+}else{
+    $session_stock = array(0);
+
+    $sql = "SELECT * FROM product";
+    $res = $conn->query($sql);
+
+    if($res->num_rows > 0) {
+        while($row = $res->fetch_assoc()) {
+            $curr_stock = $row['stock'];
+            array_push($session_stock, $curr_stock);
+        }
+    }
+    $_SESSION['session_stock'] = $session_stock;
+}
+
 ?>
 
 <!doctype html>
@@ -85,17 +104,21 @@ $_SESSION["cart_id"] = $cart_id;
                 $fetch_price = $price_query->fetch_assoc();
                 $prod_price =$fetch_price['price'];
 
-                $update_stock = "UPDATE product SET stock = stock - 1 WHERE product_id = $prod";
+                //$update_stock = "UPDATE product SET stock = stock - 1 WHERE product_id = $prod";
+                $temp_stock = $_SESSION['session_stock'][$prod];
+                $repl = array($prod => $temp_stock - 1 );
+                $new_temp_stock = array_replace($session_stock, $repl);
 
+                $_SESSION['session_stock'] = $new_temp_stock;
                 if($already_in_cart->num_rows > 0) {
                     $update_quantity = "UPDATE cart_items SET quantity = quantity + 1 WHERE cart_id = $cart_id AND product_id = $prod";
-                    $conn->query($update_stock);
+                    //$conn->query($update_stock);
                     $conn->query($update_quantity);
 
                 }else {
                     $add_cart_item = "INSERT INTO cart_items (cart_id, product_id, quantity, price) VALUES($cart_id, $prod, 1, $prod_price)";
                     echo($add_cart_item);
-                    $conn->query($update_stock);
+                    //$conn->query($update_stock);
                     $conn->query($add_cart_item);
                 }
                 header("Location:index.php");
@@ -108,13 +131,14 @@ $_SESSION["cart_id"] = $cart_id;
             $res = $conn->query($sql);
 
             if($res->num_rows > 0) {
-
+                $i = 1;
                 while($row = $res->fetch_assoc()) {
                     $product_id = $row['product_id'];
                     $product_name = $row['product_name'];
-                    $stock = $row['stock'];
+                    $stock = $_SESSION['session_stock'][$i];
                     $price = $row['price'];
                     $img = "img/" . $product_name . ".png";
+                    $i = $i + 1;
                     ?>
                     <div class="procuct">
                         <a href="extrasidor.php?id=<?php echo $product_id; ?>" style="color: black; text-decoration: none;"><img src="<?php echo $img?>" height="100px" width="100px"><br>
