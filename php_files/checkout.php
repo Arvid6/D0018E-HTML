@@ -46,26 +46,67 @@ if($lol->num_rows > 0) { //
         $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_id"); //get the name from ID
         $fetch = $tName->fetch_assoc();
         $Name = $fetch['product_name'];
+        $stock = $fetch['stock'];
         $TotalAmount = $row['TotalAmount'];
+        $stock_balance = $stock - $TotalAmount;
+
         $price = $fetch['price']; // Needs to be dynamic cant be gotten as a pointer to the product like it is now
         $totprice += $price * $TotalAmount;
         $img = "img/" . $Name . ".png";
         ?>
         <tr>
             <td><img src="<?php echo $img?>" height="100px" width="100px"></td>
-            <td><strong><?php echo $Name ; ?> </strong><br><?php echo $TotalAmount . "st" ?> <br> <small> <?php echo $price * $TotalAmount . "kr"?> </small></td>
+            <?php if($stock_balance >= 0): ?>
+                <td><strong><?php echo $Name ; ?> </strong><br><?php echo $TotalAmount . "st" ?> <br> <small> <?php echo $price * $TotalAmount . "kr"?> </small></td>
+            <?php else: ?>
+                <td>
+                    <strong>
+                        <?php echo $Name ; ?>
+                    </strong>
+                    <br>
+                        <?php echo $TotalAmount . "st" ?>
+                    <form method="Get" action="">
+                        <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
+                        <input type="submit" name="remove_many" class="button" value="Not enough in stock. Remove <?php echo($stock_balance*(-1)) ?> item(s)" />
+                    </form>
+                </td>
+            <?php endif ?>
         </tr>
             <?php
         }
         ?>
     </table><br><br><br>
-
-    <form method="Get" action="" id="chbutton">
+    <?php if($stock_balance >= 0): ?>
+        <form method="Get" action="" id="chbutton">
+            <h1>TOTAL COST: <?php echo $totprice ?></h1>
+            <input type="hidden" name="data" id="data" value="<?php ?>"/>
+            <input type="submit" name="co" class="button" id="chout" value="CHECK-OUT" />
+        </form>
+    <?php else: ?>
         <h1>TOTAL COST: <?php echo $totprice ?></h1>
-        <input type="hidden" name="data" id="data" value="<?php ?>"/>
-        <input type="submit" name="co" class="button" id="chout" value="CHECK-OUT" />
-    </form>
+        <button class="button" disabled>Remove items before checking out</button>
+    <?php endif ?>
         <?php
+}
+
+if(isset($_GET['remove_one'])) {
+    $prod_id = htmlentities($_GET['id']);
+    $conn->query("UPDATE cart_items SET quantity = quantity - 1 WHERE cart_id = $cart_id AND product_id = $prod_id");
+}
+
+
+if(isset($_GET['remove_many'])) {
+    $prod_id = htmlentities($_GET['id']);
+    $prod_info = $conn->query("SELECT * FROM product WHERE product_id = $prod_id");
+    $fetch = $prod_info->fetch_assoc();
+    $curr_stock = $fetch['stock'];
+    $in_cart = $_SESSION['items_in_cart'][$prod_id];
+    $balance = $curr_stock - $in_cart;
+    if($balance < 0) {
+        $conn->query("UPDATE cart_items SET quantity = quantity + $balance WHERE cart_id = $cart_id AND product_id = $prod_id");
+    }
+    header("Location:checkout.php");
+
 }
 
 
