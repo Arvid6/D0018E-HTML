@@ -117,7 +117,13 @@ if( isset($_GET['add']) )
     $price = $fetch['price'];
     $product_info = $fetch['product_info'];
     $img = "img/" . $product_name . ".png";
+
     ?>
+
+
+
+
+
 
     <h1 id="nameextra"><?php echo $product_name; ?></h1>
     <img src="<?php echo $img?>" id="imageextra" height="300px" width="300px">
@@ -137,6 +143,63 @@ if( isset($_GET['add']) )
 
     $conn->close();
 ?>
+
+<?php
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $grade = intval($_POST["grade"]);
+    $comment = $_POST["comment"];
+
+    if ($grade < 1 || $grade > 5) {
+        echo "Betyget måste sättas mellan 1 och 5";
+        exit;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO reviews (product_id, grade, comment) VALUES (?, ?, ?)");
+
+    $stmt->bind_param("iis", $product_id, $grade, $comment);
+
+    if ($stmt->execute()) {
+    } else {
+        echo "Något gick fel...";
+    }
+
+    $stmt->close();
+}
+?>
+
+<!-- HTML för review delen -->
+<?php
+if (isset($_SESSION['login'])) { 
+    ?>
+     <div id="review">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id=" . $product_id); ?>" method="post">
+        <label for="grade">Betyg (1-5):</label><br>
+        <input type="number" id="grade" name="grade" min="1" max="5" required><br>
+        <label for="comment">Review:</label><br>
+        <textarea id="comment" name="comment" maxlength="255" required></textarea><br>
+        <input type="submit" value="Submit">
+        </form>
+    </div>
+<?php
+}
+
+
+$sql = "SELECT comment, grade FROM reviews WHERE product_id = '$product_id'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<div class='review-block'><div class='grade'>Betyg: " . $row["grade"]. "</div><div class='comment'>Review: " . $row["comment"]. "</div></div>";
+    }
+} else {
+    echo "<div id='noReviews'>Inga Reviews finns på denna produkt</div>";
+}
+$conn->close();
+?>
+
+
 <head>
 
 <meta charset="UTF-8">
