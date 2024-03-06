@@ -96,36 +96,33 @@ $cart_id = $_SESSION['cart_id'];
                         <a href="extrasidor.php?id=<?php echo $product_id; ?>" style="color: black; text-decoration: none;"><img src="<?php echo $img?>" height="100px" width="100px"><br>
                             <strong><?php echo $product_name ; ?></a></strong><br>
                         <?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small>
-                        <?php if($stock > 0): ?>
-                            <form method="post" action="adminSettings.php">
-                                <input type="text" name="productname" placeholder="<?php echo $product_name ; ?>">
-                                <input type="text" name="productprice" placeholder="<?php echo $price ; ?>">
-                                <input type="text" name="productstock" placeholder="<?php echo $stock ; ?>">
-                                <input type="text" name="productinfo" placeholder="<?php echo $productInfo ; ?>">
-                                <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
-                                <input type="submit" name="save" class="button" value="Save" />
-                            </form>
-                        <?php else: ?>
-                            <button class="button" disabled>Out of stock</button>
-                        <?php endif; ?>
+                        <form method="post" action="">
+                            <input type="text" name="saveproductname" placeholder="<?php echo $product_name ; ?>">
+                            <input type="text" name="saveproductprice" placeholder="<?php echo $price ; ?>">
+                            <input type="text" name="saveproductstock" placeholder="<?php echo $stock ; ?>">
+                            <input type="text" name="saveproductinfo" placeholder="Product info">
+                            <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
+                            <input type="submit" name="save" class="button" value="Save" />
+                        </form>
                     </div>
                     <?php
                 }
             }
 
-            if(isset($_GET["save"])) {
-                $save_name = $_POST["productname"];
-                $save_price = floatval($_POST["productprice"]);
-                $save_stock = intval($_POST["productstock"]);
-                $save_info = $_POST["productinfo"];
+            if (isset($_POST["save"])) {
+                $save_id = $_POST["id"];
+                $save_name = $_POST["saveproductname"];
+                $save_price = floatval($_POST["saveproductprice"]);
+                $save_stock = intval($_POST["saveproductstock"]);
+                $save_info = $_POST["saveproductinfo"];
 
                 $errors = array();
 
-                if(!is_float($save_price)) {
+                if (!is_float($save_price)) {
                     print_r($save_price);
                     array_push($errors, "Input must be a number");
                 }
-                if(!is_int($save_stock)) {
+                if (!is_int($save_stock)) {
                     print_r($save_stock);
                     array_push($errors, "Input must be a number");
                 }
@@ -133,16 +130,52 @@ $cart_id = $_SESSION['cart_id'];
                     foreach ($errors as $error) {
                         echo "<div>$error</div>";
                     }
-                }else {
-                    if(!empty($save_name)) {
-                        $sql = "UPDATE product SET product  (product_name) VALUES (?,?,?,?)";
-                        $stmt = $conn -> stmt_init();
-                        $prepareStmt = $stmt -> prepare($sql);
+                } else {
+                    if (!empty($save_name)) {
+                        $sql = "UPDATE product SET product_name=? WHERE product_id=?";
+                        $stmt = $conn->stmt_init();
+                        $prepareStmt = $stmt->prepare($sql);
                         if ($prepareStmt) {
-                            $stmt -> bind_param("sdis",$productName,$price, $stock, $productInfo);
-                            $stmt -> execute();
-                            echo "<div>Product added successfully</div>";
-                        }else{
+                            $stmt->bind_param("si", $save_name, $save_id);
+                            $stmt->execute();
+                            echo "<div>Product updated successfully</div>";
+                        } else {
+                            die("Something went wrong");
+                        }
+                    }
+                    if (!empty($save_price)) {
+                        $sql = "UPDATE product SET price=? WHERE product_id=?";
+                        $stmt = $conn->stmt_init();
+                        $prepareStmt = $stmt->prepare($sql);
+                        if ($prepareStmt) {
+                            $stmt->bind_param("di", $save_price, $save_id);
+                            $stmt->execute();
+                            echo "<div>Product updated successfully</div>";
+                        } else {
+                            die("Something went wrong");
+                        }
+                    }
+                    if (!empty($save_stock)) {
+                        $sql = "UPDATE product SET stock=? WHERE product_id=?";
+                        $stmt = $conn->stmt_init();
+                        $prepareStmt = $stmt->prepare($sql);
+                        if ($prepareStmt) {
+                            $stmt->bind_param("ii", $save_stock, $save_id);
+                            $stmt->execute();
+                            echo "<div>Product updated successfully</div>";
+                        } else {
+                            die("Something went wrong");
+                        }
+                    }
+                    if (!empty($save_info)) {
+                        $sql = "UPDATE product SET product_info=? WHERE product_id=?";
+                        $stmt = $conn->stmt_init();
+                        $prepareStmt = $stmt->prepare($sql);
+                        if ($prepareStmt) {
+                            $stmt->bind_param("si", $save_info, $save_id);
+                            $stmt->execute();
+                            echo "<div>Product updated successfully</div>";
+                        } else {
                             die("Something went wrong");
                         }
                     }
