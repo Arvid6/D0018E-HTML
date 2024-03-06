@@ -47,6 +47,7 @@ if (isset($_SESSION["login"])) {
                     $_SESSION["userType"] = $userType;
                     $_SESSION["login"] = true;
                     $_SESSION["userId"] = $userId;
+                    unset($_SESSION['items_in_cart']);
                     header("Location: index.php");
                     die();
                 }else{

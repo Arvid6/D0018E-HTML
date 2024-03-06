@@ -44,27 +44,38 @@ if(isset($_SESSION['userId'])){
     $fetch = $sql->fetch_assoc();
     $cart_id = $fetch['cart_id'];
 }
+echo(session_id());
 $_SESSION["cart_id"] = $cart_id;
 
 // Get stock status for your session
-if(isset($_SESSION['session_stock'])) {
-    $session_stock = $_SESSION['session_stock'];
 
-}else{
-    $session_stock = array(0);
+$items_in_cart = array(0);
 
-    $sql = "SELECT * FROM product";
-    $res = $conn->query($sql);
+$sql = "SELECT * FROM product";
+$res = $conn->query($sql);
+$i = 1;
+if($res->num_rows > 0) {
 
-    if($res->num_rows > 0) {
-        while($row = $res->fetch_assoc()) {
-            $curr_stock = $row['stock'];
-            array_push($session_stock, $curr_stock);
+    while($row = $res->fetch_assoc()) {
+        $check_cart = $conn->query("SELECT product_id FROM cart_items WHERE cart_id = $cart_id and product_id = $i");
+
+        if($check_cart->num_rows > 0 ) {
+            $get_quant = $conn->query("SELECT quantity FROM cart_items WHERE cart_id = $cart_id AND product_id = $i");
+            $gq_fetch = $get_quant->fetch_assoc();
+            $quant = $gq_fetch['quantity'];
+            array_push($items_in_cart, $quant);
+        }else{
+            array_push($items_in_cart, 0);
         }
-    }
-    $_SESSION['session_stock'] = $session_stock;
-}
 
+        $i = $i + 1;
+    }
+}
+$_SESSION['items_in_cart'] = $items_in_cart;
+
+
+
+print_r($items_in_cart);
 ?>
 
 <!doctype html>
@@ -101,15 +112,11 @@ if(isset($_SESSION['session_stock'])) {
 
                 // Get product price when clicked
                 $price_query = $conn->query("SELECT price FROM product WHERE product_id= $prod");
-                $fetch_price = $price_query->fetch_assoc();
-                $prod_price =$fetch_price['price'];
+                $fetch_info = $price_query->fetch_assoc();
+                $prod_price =$fetch_info['price'];
 
                 //$update_stock = "UPDATE product SET stock = stock - 1 WHERE product_id = $prod";
-                $temp_stock = $_SESSION['session_stock'][$prod];
-                $repl = array($prod => $temp_stock - 1 );
-                $new_temp_stock = array_replace($session_stock, $repl);
 
-                $_SESSION['session_stock'] = $new_temp_stock;
                 if($already_in_cart->num_rows > 0) {
                     $update_quantity = "UPDATE cart_items SET quantity = quantity + 1 WHERE cart_id = $cart_id AND product_id = $prod";
                     //$conn->query($update_stock);
@@ -121,6 +128,15 @@ if(isset($_SESSION['session_stock'])) {
                     //$conn->query($update_stock);
                     $conn->query($add_cart_item);
                 }
+
+                $get_quant = $conn->query("SELECT quantity FROM cart_items WHERE cart_id = $cart_id AND product_id = $prod");
+                $gq_fetch = $get_quant->fetch_assoc();
+                $quant = $gq_fetch['quantity'];
+                $add_item = array($prod => $quant);
+                $new_item_count = array_replace($items_in_cart, $add_item);
+                $_SESSION['items_in_cart'] = $new_item_count;
+
+
                 header("Location:index.php");
 
             }
@@ -135,7 +151,15 @@ if(isset($_SESSION['session_stock'])) {
                 while($row = $res->fetch_assoc()) {
                     $product_id = $row['product_id'];
                     $product_name = $row['product_name'];
-                    $stock = $_SESSION['session_stock'][$i];
+                    $real_stock = $row['stock'];
+                    $items_in_cart = $_SESSION['items_in_cart'][$i];
+                    if($real_stock >= $items_in_cart) {
+                        $stock = $real_stock - $_SESSION['items_in_cart'][$i];
+                    }else{
+                        $stock = 0;
+                    }
+
+
                     $price = $row['price'];
                     $img = "img/" . $product_name . ".png";
                     $i = $i + 1;

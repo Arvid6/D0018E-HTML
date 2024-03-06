@@ -99,10 +99,11 @@ if(isset($_GET['co'])) {
             $product_id = $row['product_id'];
             $quantity = $row['quantity'];
 
-            $qr = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($orderId, $product_id, $quantity, 500)";
-            echo($qr);
-            $conn->query($qr);
-            echo("HMMMMMMMMMM");
+            $add_item = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($orderId, $product_id, $quantity, 500)";
+            $update_stock = "UPDATE product SET stock = stock - $quantity WHERE product_id = $product_id";
+
+            $conn->query($add_item);
+            $conn->query($update_stock);
         }
 
         // Delete every cart item corresponding to the right user id
