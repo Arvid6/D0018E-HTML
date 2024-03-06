@@ -41,6 +41,7 @@ $cart_id = $_SESSION['cart_id'];
 
 if($lol->num_rows > 0) { //
     //Get all the id per product, calculate the total price and display everything in a table.
+    $checkout_check = TRUE;
     while($row = $lol->fetch_assoc()) {
         $product_id = $row['product_id'];
         $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_id"); //get the name from ID
@@ -70,13 +71,14 @@ if($lol->num_rows > 0) { //
                         <input type="submit" name="remove_many" class="button" value="Not enough in stock. Remove <?php echo($stock_balance*(-1)) ?> item(s)" />
                     </form>
                 </td>
+                <?php $checkout_check = FALSE; ?>
             <?php endif ?>
         </tr>
             <?php
         }
         ?>
     </table><br><br><br>
-    <?php if($stock_balance >= 0): ?>
+    <?php if($checkout_check): ?>
         <form method="Get" action="" id="chbutton">
             <h1>TOTAL COST: <?php echo $totprice ?></h1>
             <input type="hidden" name="data" id="data" value="<?php ?>"/>
