@@ -118,7 +118,11 @@ if(isset($_GET['co'])) {
 
     // Add new order if there are items in the cart
     if($lol->num_rows > 0) {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+
+        $conn->begin_transaction();
+        try {
         if(isset($_SESSION['userId'])) {
             echo("Inloggad");
             $user_id = implode($_SESSION['userId']);
@@ -127,17 +131,23 @@ if(isset($_GET['co'])) {
             // Fetch order ID
             $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE UserId = $user_id ORDER BY order_id Desc");
 
-        }else{
+        }else {
             $session_id = session_id();
             echo("utloggad");
             $conn->query("INSERT INTO `order` (session_id) VALUES ('$session_id')");
             // Fetch order ID
             $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE session_id = '$session_id' ORDER BY order_id Desc");
-
+        }
+        $conn->commit();
+        } catch (mysqli_sql_exception $exception) {
+            $conn->rollback();
+            throw $e;
         }
 
         $orderId = ($fetch_orderId->fetch_assoc())['order_id'];
 
+        $conn->begin_transaction();
+        try {
         while($row = $lol->fetch_assoc()) {
             $product_id = $row['product_id'];
             $quantity = $row['quantity'];
@@ -151,6 +161,13 @@ if(isset($_GET['co'])) {
 
         // Delete every cart item corresponding to the right user id
         $conn->query("DELETE FROM cart_items WHERE cart_id = $cart_id");
+
+        $conn->commit();
+        } catch(mysqli_sql_exception $exception) {
+             $conn->rollback();
+             throw $e;
+        }
+
         header("Refresh:0");
         echo("Order made!");
     }else {
