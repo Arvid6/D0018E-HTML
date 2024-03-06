@@ -24,8 +24,6 @@ $cart_id = $_SESSION['cart_id'];
     <div class="add_items">
         <?php
         if (isset($_POST["addProduct"])){
-            ini_set('display_errors', 1);
-            error_reporting(E_ALL);
             $productName = $_POST["productName"];
             $price = floatval($_POST["productPrice"]);
             $stock = intval($_POST["stock"]);
@@ -50,7 +48,7 @@ $cart_id = $_SESSION['cart_id'];
                     echo "<div>$error</div>";
                 }
             }else{
-                $sql = "INSERT INTO product (product_name, price, stock, product_info) VALUES (?,?,?)";
+                $sql = "INSERT INTO product (product_name, price, stock, product_info) VALUES (?,?,?,?)";
                 $stmt = $conn -> stmt_init();
                 $prepareStmt = $stmt -> prepare($sql);
                 if ($prepareStmt) {
@@ -99,15 +97,55 @@ $cart_id = $_SESSION['cart_id'];
                             <strong><?php echo $product_name ; ?></a></strong><br>
                         <?php echo $price . "kr" ?> <br> <small> <?php echo "Stock: " .  $stock; ?></small>
                         <?php if($stock > 0): ?>
-                            <form method="Get" action="">
+                            <form method="post" action="adminSettings.php">
+                                <input type="text" name="productname" placeholder="<?php echo $product_name ; ?>">
+                                <input type="text" name="productprice" placeholder="<?php echo $price ; ?>">
+                                <input type="text" name="productstock" placeholder="<?php echo $stock ; ?>">
+                                <input type="text" name="productinfo" placeholder="<?php echo $productInfo ; ?>">
                                 <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
-                                <input type="submit" name="add" class="button" value="Add to cart" />
+                                <input type="submit" name="save" class="button" value="Save" />
                             </form>
                         <?php else: ?>
                             <button class="button" disabled>Out of stock</button>
                         <?php endif; ?>
                     </div>
                     <?php
+                }
+            }
+
+            if(isset($_GET["save"])) {
+                $save_name = $_POST["productname"];
+                $save_price = floatval($_POST["productprice"]);
+                $save_stock = intval($_POST["productstock"]);
+                $save_info = $_POST["productinfo"];
+
+                $errors = array();
+
+                if(!is_float($save_price)) {
+                    print_r($save_price);
+                    array_push($errors, "Input must be a number");
+                }
+                if(!is_int($save_stock)) {
+                    print_r($save_stock);
+                    array_push($errors, "Input must be a number");
+                }
+                if (count($errors) > 0) {
+                    foreach ($errors as $error) {
+                        echo "<div>$error</div>";
+                    }
+                }else {
+                    if(!empty($save_name)) {
+                        $sql = "UPDATE product SET product  (product_name) VALUES (?,?,?,?)";
+                        $stmt = $conn -> stmt_init();
+                        $prepareStmt = $stmt -> prepare($sql);
+                        if ($prepareStmt) {
+                            $stmt -> bind_param("sdis",$productName,$price, $stock, $productInfo);
+                            $stmt -> execute();
+                            echo "<div>Product added successfully</div>";
+                        }else{
+                            die("Something went wrong");
+                        }
+                    }
                 }
             }
         ?>
