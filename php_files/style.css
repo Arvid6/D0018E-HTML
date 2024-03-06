@@ -345,3 +345,32 @@ Extrasidor css
     font-family: Arial, sans-serif;
 }
 
+/* Admin sida */
+.flex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.add_items {
+    border: 2px solid black;
+    margin: auto;
+    padding: 20px;
+
+}
+
+.UserList, .productList {
+    border: 2px solid black;
+    margin: auto;
+    padding: 20px;
+}
+.UserList {
+}
+
+.adminProduct {
+    padding: 20px;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+}
+
+.adminUsers {
+}
+/* Slut admin sida */
