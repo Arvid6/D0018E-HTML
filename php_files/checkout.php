@@ -1,31 +1,7 @@
  <?php
 session_start();
- include("connect.php"); 
-$cart_id = $_SESSION['cart_id'];
-
- $items_in_cart = array(0);
-
- $sql = "SELECT * FROM product";
- $res = $conn->query($sql);
- $i = 1;
- if($res->num_rows > 0) {
-
-     while($row = $res->fetch_assoc()) {
-         $check_cart = $conn->query("SELECT product_id FROM cart_items WHERE cart_id = $cart_id and product_id = $i");
-
-         if($check_cart->num_rows > 0 ) {
-             $get_quant = $conn->query("SELECT quantity FROM cart_items WHERE cart_id = $cart_id AND product_id = $i");
-             $gq_fetch = $get_quant->fetch_assoc();
-             $quant = $gq_fetch['quantity'];
-             array_push($items_in_cart, $quant);
-         }else{
-             array_push($items_in_cart, 0);
-         }
-
-         $i = $i + 1;
-     }
- }
- $_SESSION['items_in_cart'] = $items_in_cart;
+ include("connect.php");
+ $path = "Location:checkout.php";
 ?>
 
 <!doctype html>
@@ -54,45 +30,7 @@ $cart_id = $_SESSION['cart_id'];
     </style>
     <table>
 <?php
-if( isset($_GET['add']) )
-{
-    //be sure to validate and clean your variables
-    $prod = htmlentities($_GET['id']);
 
-    // Check if the product already exists in the cart
-    $already_in_cart_query = "SELECT product_id FROM cart_items WHERE cart_id = $cart_id and product_id = $prod";
-    $already_in_cart = $conn->query($already_in_cart_query);
-
-    // Get product price when clicked
-    $price_query = $conn->query("SELECT price FROM product WHERE product_id= $prod");
-    $fetch_info = $price_query->fetch_assoc();
-    $prod_price =$fetch_info['price'];
-
-    //$update_stock = "UPDATE product SET stock = stock - 1 WHERE product_id = $prod";
-
-    if($already_in_cart->num_rows > 0) {
-        $update_quantity = "UPDATE cart_items SET quantity = quantity + 1 WHERE cart_id = $cart_id AND product_id = $prod";
-        //$conn->query($update_stock);
-        $conn->query($update_quantity);
-
-    }else {
-        $add_cart_item = "INSERT INTO cart_items (cart_id, product_id, quantity, price) VALUES($cart_id, $prod, 1, $prod_price)";
-        echo($add_cart_item);
-        //$conn->query($update_stock);
-        $conn->query($add_cart_item);
-    }
-
-    $get_quant = $conn->query("SELECT quantity FROM cart_items WHERE cart_id = $cart_id AND product_id = $prod");
-    $gq_fetch = $get_quant->fetch_assoc();
-    $quant = $gq_fetch['quantity'];
-    $add_item = array($prod => $quant);
-    $new_item_count = array_replace($items_in_cart, $add_item);
-    $_SESSION['items_in_cart'] = $new_item_count;
-
-
-    header("Location:checkout.php");
-
-}
     //Get the product and the amount of each product grouped by ID
     $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_items WHERE cart_id = $cart_id GROUP BY product_id");
     $totprice = 0;
@@ -160,19 +98,6 @@ if($lol->num_rows > 0) { //
         <?php
 }
 
-if(isset($_GET['remove_one'])) {
-    $prod_id = htmlentities($_GET['id']);
-    $in_cart = $_SESSION['items_in_cart'][$prod_id];
-    if($in_cart > 1) {
-        $conn->query("UPDATE cart_items SET quantity = quantity - 1 WHERE cart_id = $cart_id AND product_id = $prod_id");
-    }
-    else if($in_cart == 1){
-        $conn->query("DELETE FROM cart_items WHERE cart_id = $cart_id AND product_id = $prod_id");
-        unset($_SESSION['items_in_cart'][$prod_id]);
-    }
-    header("Location:checkout.php");
-
-}
 
 
 if(isset($_GET['remove_many'])) {

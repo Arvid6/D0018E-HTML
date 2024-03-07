@@ -7,7 +7,7 @@ $cart_id = $_SESSION['cart_id'];
 if (isset($_SESSION["login"])) {
     header("Location: index.php");
 }
-
+$path = "Location:login.php";
 ?>
 
 

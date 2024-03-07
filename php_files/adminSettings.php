@@ -3,6 +3,7 @@
 session_start();
 include("connect.php");
 $cart_id = $_SESSION['cart_id'];
+$path = "Location:adminSettings.php";
 ?>
 
 <!DOCTYPE html>
