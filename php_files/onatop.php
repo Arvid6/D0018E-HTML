@@ -118,6 +118,7 @@ $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_i
                     //Get all the id per product, calculate the total price and display everything in a table.
                     while ($row = $lol->fetch_assoc()) {
                         $product_ids = $row['product_id'];
+                        $product_idx = $row['product_id'];
                         $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_ids"); //get the name from ID
                         $fetch = $tName->fetch_assoc();
                         $Name = $fetch['product_name'];
@@ -128,10 +129,6 @@ $lol = $conn->query("SELECT product_id, SUM(quantity) as TotalAmount FROM cart_i
                            style="color: black; text-decoration: none;"> <img src="<?php echo $img ?>" height="30px"
                                                                               width="30px"><?php echo $Name, " | ", $TotalAmount; ?>
                         </a>
-                        <form method="Get" action="">
-                            <input type="hidden" name="id" id="id" value="<?php echo $product_ids; ?>"/>
-                            <input type="submit" name="add" class="button" value="+1" width="30%"/>
-                        </form>
                         <form method="Get" action="">
                             <input type="hidden" name="id" id="id" value="<?php echo $product_ids; ?>"/>
                             <input type="submit" name="remove_one" class="button" value="-1" width="30%"/>

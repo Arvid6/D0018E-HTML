@@ -118,6 +118,8 @@ if($lol->num_rows > 0) { //
     $checkout_check = TRUE;
     while($row = $lol->fetch_assoc()) {
         $product_id = $row['product_id'];
+        $product_idr = $row['product_id'];
+        $product_idf = $row['product_id'];
         $tName = $conn->query("SELECT * FROM product WHERE product_id = $product_id"); //get the name from ID
         $fetch = $tName->fetch_assoc();
         $Name = $fetch['product_name'];
@@ -133,11 +135,13 @@ if($lol->num_rows > 0) { //
             <td><img src="<?php echo $img?>" height="100px" width="100px"></td>
             <?php if($stock_balance >= 0): ?>
                 <td><strong><?php echo $Name ; ?></strong><br><?php echo $TotalAmount . "st" ?><br><small><?php echo $price * $TotalAmount . "kr"?></small></td>
-                <td><form method="Get" action="">
+                <td>
+                    <form method="Get" action="">
                         <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
-                        <input type="submit" name="add" class="button" value="Add to cart" />
-                    </form> <form method="Get" action="">
-                        <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
+                        <input type="submit" name="add" class="button" value="Add one" />
+                    </form>
+                    <form method="Get" action="">
+                        <input type="hidden" name="id" id="id" value="<?php echo $product_idr; ?>"/>
                         <input type="submit" name="remove_one" class="button" value="Remove one" />
                     </form></td>
             <?php else: ?>
@@ -148,7 +152,7 @@ if($lol->num_rows > 0) { //
                     <br>
                         <?php echo $TotalAmount . "st" ?>
                     <form method="Get" action="">
-                        <input type="hidden" name="id" id="id" value="<?php echo $product_id; ?>"/>
+                        <input type="hidden" name="id" id="id" value="<?php echo $product_idf; ?>"/>
                         <input type="submit" name="remove_many" class="button" value="Not enough in stock. Remove<?php echo($stock_balance*(-1)) ?>item(s)" />
                     </form>
                 </td>
