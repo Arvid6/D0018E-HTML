@@ -1,5 +1,4 @@
 <div id="minimeny">
-
     <?php
     // Fetch user id if logged in, or get session id if not logged in.
 
