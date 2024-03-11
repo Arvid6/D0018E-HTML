@@ -74,13 +74,10 @@ if(isset($_GET['co'])) {
         }
 
         header("Location: checkout.php");
-        echo("Order made!");
     }
 
 }
-
 ?>
-
 <!doctype html>
 <html>
 <head>
@@ -175,72 +172,6 @@ if($lol->num_rows > 0) { //
         <?php
 }else {
     echo("Your cart is empty");
-}
-
-
-
-
-
-
-if(isset($_GET['co'])) {
-    // Add from cart to order, and delete the cart after
-    $lol = $conn->query("SELECT * FROM cart_items  WHERE cart_id = $cart_id");
-
-    // Add new order if there are items in the cart
-    if($lol->num_rows > 0) {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-
-        $conn->begin_transaction();
-        try {
-        if(isset($_SESSION['userId'])) {
-            $user_id = implode($_SESSION['userId']);
-            $tbi = "INSERT INTO `order` (UserId) VALUES ($user_id)";
-            $conn->query($tbi);
-            // Fetch order ID
-            $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE UserId = $user_id ORDER BY order_id Desc");
-
-        }else {
-            $session_id = session_id();
-            $conn->query("INSERT INTO `order` (session_id) VALUES ('$session_id')");
-            // Fetch order ID
-            $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE session_id = '$session_id' ORDER BY order_id Desc");
-        }
-        $conn->commit();
-        } catch (mysqli_sql_exception $exception) {
-            $conn->rollback();
-            throw $e;
-        }
-
-        $orderId = ($fetch_orderId->fetch_assoc())['order_id'];
-
-        $conn->begin_transaction();
-        try {
-        while($row = $lol->fetch_assoc()) {
-            $product_id = $row['product_id'];
-            $quantity = $row['quantity'];
-            $price_order = $row['price'];
-
-            $add_item = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($orderId, $product_id, $quantity, $price_order)";
-            $update_stock = "UPDATE product SET stock = stock - $quantity WHERE product_id = $product_id";
-
-            $conn->query($add_item);
-            $conn->query($update_stock);
-        }
-
-        // Delete every cart item corresponding to the right user id
-        $conn->query("DELETE FROM cart_items WHERE cart_id = $cart_id");
-
-        $conn->commit();
-        } catch(mysqli_sql_exception $exception) {
-             $conn->rollback();
-             throw $e;
-        }
-
-        header("Location: checkout.php");
-        echo("Order made!");
-    }
-
 }
 
 ?>
