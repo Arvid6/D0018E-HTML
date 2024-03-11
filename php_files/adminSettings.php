@@ -229,7 +229,7 @@ $path = "Location:adminSettings.php";
 
                 $errors = array();
 
-                if (!is_float($save_number)) {
+                if (!empty($save_number) and !is_float($save_number)) {
                     print_r($save_number);
                     array_push($errors, "Input must be a number");
                 }
