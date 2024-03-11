@@ -20,59 +20,71 @@ if(isset($_GET['remove_many'])) {
 
 if(isset($_GET['co'])) {
     // Add from cart to order, and delete the cart after
+    $que = $conn->query("SELECT * FROM cart_items  WHERE cart_id = $cart_id");
     $lol = $conn->query("SELECT * FROM cart_items  WHERE cart_id = $cart_id");
-
-    // Add new order if there are items in the cart
-    if($lol->num_rows > 0) {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-
-        $conn->begin_transaction();
-        try {
-            if(isset($_SESSION['userId'])) {
-                $user_id = implode($_SESSION['userId']);
-                $tbi = "INSERT INTO `order` (UserId) VALUES ($user_id)";
-                $conn->query($tbi);
-                // Fetch order ID
-                $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE UserId = $user_id ORDER BY order_id Desc");
-
-            }else {
-                $session_id = session_id();
-                $conn->query("INSERT INTO `order` (session_id) VALUES ('$session_id')");
-                // Fetch order ID
-                $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE session_id = '$session_id' ORDER BY order_id Desc");
-            }
-            $conn->commit();
-        } catch (mysqli_sql_exception $exception) {
-            $conn->rollback();
-            throw $e;
+    $enough = TRUE;
+    // Another stock check in case someone made an order while you were idle in the checkout
+    while($row = $que->fetch_assoc()) {
+        $p_id =$row['product_id'];
+        $cart = $row['quantity'];
+        $last_check = $conn->query("SELECT stock FROM product WHERE product_id =$p_id");
+        $fetch = $last_check->fetch_assoc();
+        $latest_stock = $fetch['stock'];
+        if($latest_stock - $cart < 0 ) {
+            $enough = FALSE;
         }
+    }
+    if($enough) {
+        // Add new order if there are items in the cart
+        if ($lol->num_rows > 0) {
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-        $orderId = ($fetch_orderId->fetch_assoc())['order_id'];
 
-        $conn->begin_transaction();
-        try {
-            while($row = $lol->fetch_assoc()) {
-                $product_id = $row['product_id'];
-                $quantity = $row['quantity'];
-                $price_order = $row['price'];
+            $conn->begin_transaction();
+            try {
+                if (isset($_SESSION['userId'])) {
+                    $user_id = implode($_SESSION['userId']);
+                    // Make new order
+                    $tbi = "INSERT INTO `order` (UserId) VALUES ($user_id)";
+                    $conn->query($tbi);
+                    // Fetch newest order ID
+                    $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE UserId = $user_id ORDER BY order_id Desc");
 
-                $add_item = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($orderId, $product_id, $quantity, $price_order)";
-                $update_stock = "UPDATE product SET stock = stock - $quantity WHERE product_id = $product_id";
+                } else {
+                    $session_id = session_id();
+                    // Make new orer
+                    $conn->query("INSERT INTO `order` (session_id) VALUES ('$session_id')");
+                    // Fetch newest order ID
+                    $fetch_orderId = $conn->query("SELECT order_id FROM `order` WHERE session_id = '$session_id' ORDER BY order_id Desc");
+                }
 
-                $conn->query($add_item);
-                $conn->query($update_stock);
+                $orderId = ($fetch_orderId->fetch_assoc())['order_id'];
+
+
+                while ($row = $lol->fetch_assoc()) {
+                    $product_id = $row['product_id'];
+                    $quantity = $row['quantity'];
+                    $price_order = $row['price'];
+
+                    $add_item = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($orderId, $product_id, $quantity, $price_order)";
+                    $update_stock = "UPDATE product SET stock = stock - $quantity WHERE product_id = $product_id";
+
+                    $conn->query($add_item);
+                    $conn->query($update_stock);
+                }
+
+                // Delete every cart item corresponding to the right user id
+                $conn->query("DELETE FROM cart_items WHERE cart_id = $cart_id");
+
+                $conn->commit();
+            } catch (mysqli_sql_exception $exception) {
+                $conn->rollback();
+                throw $e;
             }
 
-            // Delete every cart item corresponding to the right user id
-            $conn->query("DELETE FROM cart_items WHERE cart_id = $cart_id");
-
-            $conn->commit();
-        } catch(mysqli_sql_exception $exception) {
-            $conn->rollback();
-            throw $e;
+            //header("Location: checkout.php");
         }
-
+    } else {
         header("Location: checkout.php");
     }
 
