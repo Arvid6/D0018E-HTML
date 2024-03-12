@@ -117,9 +117,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO reviews (product_id, grade, comment) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO reviews (product_id, grade, comment, UserId) VALUES (?, ?, ?, ?)");
 
-    $stmt->bind_param("iis", $product_id, $grade, $comment);
+    $stmt->bind_param("iisi", $product_id, $grade, $comment, $user_id);
 
     if ($stmt->execute()) {
     } else {
